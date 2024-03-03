@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
+    <RootNamespace>Serilog</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>embedded</DebugType>
+    <EmbedAllSources>true</EmbedAllSources>
+    <Nullable>disable</Nullable>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <Target Name="DeleteBinObjFolders" BeforeTargets="Clean">
+    <RemoveDir Directories=".\bin" />
+  </Target>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CA1862;CS8618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA1862;CS8618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <DefineConstants>NETCORE;NETSTANDARD2_1</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.22" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.1'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+  </ItemGroup>
+
+</Project>

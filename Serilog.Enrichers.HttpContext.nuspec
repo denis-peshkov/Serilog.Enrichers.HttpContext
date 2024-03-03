@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+	<metadata>
+		<id>Serilog.Enrichers.HttpContext</id>
+		<version>8.0.0</version>
+		<title>Serilog.Enrichers.HttpContext</title>
+		<authors>denis-peshkov</authors>
+		<owners>denis-peshkov</owners>
+		<license type="expression">MIT</license>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<projectUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</projectUrl>
+		<repository type="git" url="https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext" />
+		<readme>docs\README.md</readme>
+		<icon>icon.png</icon>
+		<releaseNotes>
+		</releaseNotes>
+		<description>Enrich logs with client IP, CorrelationId and HTTP request headers.</description>
+		<tags>serilog enrichers enricher ip correlation-id request header</tags>
+		<copyright>Copyright 2024</copyright>
+		<dependencies>
+			<group targetFramework="netstandard2.1">
+				<dependency id="Microsoft.AspNetCore.Http" version="2.2.2" />
+				<dependency id="Serilog" version="2.9.0" />
+			</group>
+			<group targetFramework=".NET6.0">
+				<dependency id="Serilog" version="2.9.0" />
+			</group>
+			<group targetFramework=".NET7.0">
+				<dependency id="Serilog" version="2.9.0" />
+			</group>
+			<group targetFramework=".NET8.0">
+				<dependency id="Serilog" version="2.9.0" />
+			</group>
+		</dependencies>
+		<frameworkReferences>
+			<group targetFramework=".NET6.0">
+				<frameworkReference name="Microsoft.AspNetCore.App" />
+			</group>
+			<group targetFramework=".NET7.0">
+				<frameworkReference name="Microsoft.AspNetCore.App" />
+			</group>
+			<group targetFramework=".NET8.0">
+				<frameworkReference name="Microsoft.AspNetCore.App" />
+			</group>
+		</frameworkReferences>
+	</metadata>
+	<files>
+		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\netstandard2.1\Serilog.Enrichers.HttpContext.dll" target="lib/netstandard2.1" />
+		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net6.0\Serilog.Enrichers.HttpContext.dll" target="lib/net6.0" />
+		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net7.0\Serilog.Enrichers.HttpContext.dll" target="lib/net7.0" />
+		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net8.0\Serilog.Enrichers.HttpContext.dll" target="lib/net8.0" />
+		<file src="README.md" target="docs\" />
+		<file src="icon.png" target="" />
+	</files>
+</package>
