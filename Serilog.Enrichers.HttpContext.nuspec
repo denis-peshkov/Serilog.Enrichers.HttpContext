@@ -45,10 +45,10 @@
 		</frameworkReferences>
 	</metadata>
 	<files>
-		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\netstandard2.1\Serilog.Enrichers.HttpContext.dll" target="lib/netstandard2.1" />
-		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net6.0\Serilog.Enrichers.HttpContext.dll" target="lib/net6.0" />
-		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net7.0\Serilog.Enrichers.HttpContext.dll" target="lib/net7.0" />
-		<file src="src\Serilog.Enrichers.HttpContextAccessor\bin\release\net8.0\Serilog.Enrichers.HttpContext.dll" target="lib/net8.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\netstandard2.1\Serilog.Enrichers.HttpContext.dll" target="lib/netstandard2.1" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net6.0\Serilog.Enrichers.HttpContext.dll" target="lib/net6.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net7.0\Serilog.Enrichers.HttpContext.dll" target="lib/net7.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net8.0\Serilog.Enrichers.HttpContext.dll" target="lib/net8.0" />
 		<file src="README.md" target="docs\" />
 		<file src="icon.png" target="" />
 	</files>
