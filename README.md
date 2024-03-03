@@ -1,14 +1,14 @@
-# Serilog.Enrichers.HttpContext [![NuGet](http://img.shields.io/nuget/v/Serilog.Enrichers.ClientInfo.svg?style=flat)](https://www.nuget.org/packages/Serilog.Enrichers.ClientInfo/)
+# Serilog.Enrichers.HttpContext [![Nuget](https://img.shields.io/nuget/v/Serilog.Enrichers.HttpContext.svg)](https://nuget.org/packages/Serilog.Enrichers.HttpContext/)
 Enrich logs with client IP, Correlation Id and HTTP request headers.
 
-Install the _Serilog.Enrichers.ClientInfo_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.ClientInfo/)
+Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
 ```powershell
-Install-Package Serilog.Enrichers.ClientInfo
+Install-Package Serilog.Enrichers.HttpContext
 ```
 or
 ```shell
-dotnet add package Serilog.Enrichers.ClientInfo
+dotnet add package Serilog.Enrichers.HttpContext
 ```
 
 Apply the enricher to your `LoggerConfiguration` in code:
