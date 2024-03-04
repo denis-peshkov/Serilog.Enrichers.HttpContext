@@ -1,5 +1,5 @@
 # Serilog.Enrichers.HttpContext [![Nuget](https://img.shields.io/nuget/v/Serilog.Enrichers.HttpContext.svg)](https://nuget.org/packages/Serilog.Enrichers.HttpContext/)
-Enrich logs with client IP, Correlation Id and HTTP request headers.
+Enrich logs with client IP, Correlation Id, RequestBody, RequestQuery and HTTP request headers.
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
@@ -172,6 +172,8 @@ namespace MyWebApp
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} CLient IP: {ClientIp} Correlation Id: {CorrelationId} header-name: {headername} {Message:lj}{NewLine}{Exception}")
                 .Enrich.WithClientIp()
                 .Enrich.WithCorrelationId()
+                .Enrich.WithRequestBody()
+                .Enrich.WithRequestQuery()
                 .Enrich.WithRequestHeader("header-name")
                 .Enrich.WithRequestHeader("another-header-name", "SomePropertyName")
                 .CreateLogger();

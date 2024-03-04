@@ -4,9 +4,6 @@
     <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
     <LangVersion>11</LangVersion>
     <RootNamespace>Serilog</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <DebugType>embedded</DebugType>
     <EmbedAllSources>true</EmbedAllSources>
     <Nullable>disable</Nullable>
     <Configurations>Debug;Release</Configurations>
@@ -16,7 +13,7 @@
   <Target Name="DeleteBinObjFolders" BeforeTargets="Clean">
     <RemoveDir Directories=".\bin" />
   </Target>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;CA1862;CS8618</NoWarn>
   </PropertyGroup>

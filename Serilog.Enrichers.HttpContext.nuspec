@@ -14,8 +14,8 @@
 		<icon>icon.png</icon>
 		<releaseNotes>
 		</releaseNotes>
-		<description>Enrich logs with client IP, CorrelationId and HTTP request headers.</description>
-		<tags>serilog enrichers enricher ip correlation-id request header</tags>
+		<description>Enrich logs with client IP, CorrelationId, RequestBody, RequestQuery and HTTP request headers.</description>
+		<tags>serilog enrichers enricher ip correlation-id request header body query</tags>
 		<copyright>Copyright 2024</copyright>
 		<dependencies>
 			<group targetFramework="netstandard2.1">
