@@ -35,6 +35,7 @@ public class RequestBodyEnricher : ILogEventEnricher
                 return;
             }
 
+            httpContext.Request.EnableBuffering();
             var requestBody = GetStringAsync(httpContext.Request.Body).GetAwaiter().GetResult();
 
             var requestBodyProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(requestBody));
@@ -52,8 +53,7 @@ public class RequestBodyEnricher : ILogEventEnricher
 
     private static async Task<string> GetStringAsync(Stream stream)
     {
-        // stream.Position = 0;
-        stream.Seek(0, SeekOrigin.Begin);
+        stream.Position = 0;
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
     }
