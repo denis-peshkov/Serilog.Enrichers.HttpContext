@@ -1,4 +1,4 @@
-﻿namespace Serilog;
+﻿namespace Serilog.Extensions;
 
 /// <summary>
 ///   Extension methods for setting up client IP, client agent and correlation identifier enrichers <see cref="LoggerEnrichmentConfiguration"/>.

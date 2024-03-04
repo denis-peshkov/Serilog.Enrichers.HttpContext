@@ -1,4 +1,4 @@
-﻿namespace Serilog.Enrichers.ClientInfo.Tests;
+﻿namespace Serilog.Enrichers.HttpContext.Tests.Extensions;
 
 internal static class Extensions
 {

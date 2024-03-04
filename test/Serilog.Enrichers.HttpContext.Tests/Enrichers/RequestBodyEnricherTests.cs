@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Serilog.Enrichers.ClientInfo.Tests;
+﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class RequestBodyEnricherTests
 {

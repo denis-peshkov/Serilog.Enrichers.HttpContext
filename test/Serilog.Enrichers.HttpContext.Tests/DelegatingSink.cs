@@ -1,4 +1,4 @@
-﻿namespace Serilog.Enrichers.ClientInfo.Tests;
+﻿namespace Serilog.Enrichers.HttpContext.Tests;
 
 public class DelegatingSink : ILogEventSink
 {
