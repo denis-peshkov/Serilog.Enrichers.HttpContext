@@ -1,4 +1,6 @@
-﻿namespace Serilog.Enrichers;
+﻿using Microsoft.AspNetCore.WebUtilities;
+
+namespace Serilog.Enrichers;
 
 /// <inheritdoc/>
 public class RequestBodyEnricher : ILogEventEnricher
@@ -50,7 +52,8 @@ public class RequestBodyEnricher : ILogEventEnricher
 
     private static async Task<string> GetStringAsync(Stream stream)
     {
-        stream.Position = 0;
+        // stream.Position = 0;
+        stream.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
     }
