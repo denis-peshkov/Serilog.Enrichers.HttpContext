@@ -37,6 +37,7 @@ public class RequestBodyEnricher : ILogEventEnricher
 
             httpContext.Request.EnableBuffering();
             var requestBody = GetStringAsync(httpContext.Request.Body).GetAwaiter().GetResult();
+            httpContext.Request.Body.Position = 0;
 
             var requestBodyProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(requestBody));
             logEvent.AddOrUpdateProperty(requestBodyProperty);
