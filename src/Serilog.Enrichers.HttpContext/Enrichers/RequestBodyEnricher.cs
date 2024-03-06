@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-
-namespace Serilog.Enrichers;
+﻿namespace Serilog.Enrichers;
 
 /// <inheritdoc/>
 public class RequestBodyEnricher : ILogEventEnricher
@@ -36,8 +34,11 @@ public class RequestBodyEnricher : ILogEventEnricher
             }
 
             httpContext.Request.EnableBuffering();
-            var requestBody = GetStringAsync(httpContext.Request.Body).GetAwaiter().GetResult();
+            using var memoryStream = new MemoryStream();
+            httpContext.Request.Body.CopyTo(memoryStream);
             httpContext.Request.Body.Position = 0;
+            memoryStream.Position = 0;
+            var requestBody = Encoding.UTF8.GetString(memoryStream.ToArray());
 
             var requestBodyProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(requestBody));
             logEvent.AddOrUpdateProperty(requestBodyProperty);
@@ -50,12 +51,5 @@ public class RequestBodyEnricher : ILogEventEnricher
             throw;
         }
 
-    }
-
-    private static async Task<string> GetStringAsync(Stream stream)
-    {
-        stream.Position = 0;
-        using var reader = new StreamReader(stream);
-        return await reader.ReadToEndAsync();
     }
 }

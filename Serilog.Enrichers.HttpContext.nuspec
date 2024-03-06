@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>Serilog.Enrichers.HttpContext</id>
-		<version>8.0.0</version>
+		<version>8.0.3</version>
 		<title>Serilog.Enrichers.HttpContext</title>
 		<authors>denis-peshkov</authors>
 		<owners>denis-peshkov</owners>
