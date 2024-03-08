@@ -16,7 +16,7 @@ public class RequestBodyEnricherTests
     public void EnrichLogWithBody_WhenHttpRequestContainBody_ShouldCreateBodyProperty()
     {
         // Arrange
-        var body = "{ \"a\": 10 }";
+        var body = "{ \"a1\": 10, \"a2\": \"vvv\" }";
         using var memoryStream = new MemoryStream();
         UpdateMemoryStream(memoryStream, body);
         memoryStream.Seek(0, SeekOrigin.Begin);

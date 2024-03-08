@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>Serilog.Enrichers.HttpContext</id>
-		<version>8.0.3</version>
+		<version>8.0.4</version>
 		<title>Serilog.Enrichers.HttpContext</title>
 		<authors>denis-peshkov</authors>
 		<owners>denis-peshkov</owners>
@@ -45,10 +45,10 @@
 		</frameworkReferences>
 	</metadata>
 	<files>
-		<file src="src\Serilog.Enrichers.HttpContext\bin\release\netstandard2.1\Serilog.Enrichers.HttpContext.dll" target="lib/netstandard2.1" />
-		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net6.0\Serilog.Enrichers.HttpContext.dll" target="lib/net6.0" />
-		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net7.0\Serilog.Enrichers.HttpContext.dll" target="lib/net7.0" />
-		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net8.0\Serilog.Enrichers.HttpContext.dll" target="lib/net8.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\netstandard2.1\Serilog.Enrichers.HttpContext.*" target="lib/netstandard2.1" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net6.0\Serilog.Enrichers.HttpContext.*" target="lib/net6.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net7.0\Serilog.Enrichers.HttpContext.*" target="lib/net7.0" />
+		<file src="src\Serilog.Enrichers.HttpContext\bin\release\net8.0\Serilog.Enrichers.HttpContext.*" target="lib/net8.0" />
 		<file src="README.md" target="docs\" />
 		<file src="icon.png" target="" />
 	</files>

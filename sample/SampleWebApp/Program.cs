@@ -38,6 +38,14 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapPost("/weatherforecast", (context) =>
+    {
+        var t = Encoding.UTF8.GetString(context.Request.BodyReader.ReadAtLeastAsync(0).Result.Buffer);
+
+        return Task.FromResult(t);
+    })
+    .WithName("PostWeatherForecast");
+
 app.Run();
 
 internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
