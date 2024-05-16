@@ -5,24 +5,107 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+    - master
+    - dev
+    - hotfix/*
+    - release/*
+    - feature/*
   pull_request:
-    branches: [ "master" ]
+    branches:
+    - master
 
 jobs:
   build:
 
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'Cross.ErrorHandlers.sln'
+
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+    - name: Checkout
+      uses: actions/checkout@v4
       with:
-        dotnet-version: 7.0.x
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2.0.0
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v1.1.1
+      with:
+        versionSpec: '5.12.0'
+
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v1.1.1
+      with:
+        useConfigFile: true
+
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Restore dependencies with NuGet
+      run: nuget restore $SOLUTION
+
     - name: Build
       run: dotnet build --no-restore
+
+    - name: Build 2
+      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
+
+    - name: Nuget Pack
+      run: nuget pack _nuget/config.nuspec -Symbols -Version ${{env.semVer}}
+
+#    - name: Create Tag
+#      uses: rickstaa/action-create-tag@v1.7.2
+#      with:
+#        tag: v${{ env.semVer }}
+
+    - name: ref
+      run: echo "github.head_ref 1 ${{github.head_ref}} 2 $GITHUB_REF "
+
+    - name: Create git tag
+#      if: contains($GITHUB_REF, 'refs/heads/release')
+#        || contains($GITHUB_REF, 'refs/heads/hotfix')
+#        || contains($GITHUB_REF, 'refs/heads/master')
+      run: |
+        git tag v${{ env.semVer }}
+      #    - name: Push git tag
+      #      run: git push origin v${{ env.semVer }}
+    - name: Push git tag
+      if: contains(fromJson('["refs/heads/master", "refs/heads/release", "refs/heads/hotfix"]'), github.ref)
+      run: |
+        git config --global user.name 'Denis Peshkov'
+        git config --global user.email 'denis.peshkov@outlook.com'
+        git remote set-url origin https://x-access-token:${{ secrets.TAGTOKEN }}@github.com/${{ github.repository }}
+        git push origin v${{ env.semVer }}
+
+#    - name: Tag commit
+#      uses: tvdias/github-tagger@v0.0.2
+#      with:
+#        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#        tag: "v${{ env.semVer }}"
+
+#    - name: Create tag
+#      uses: actions/github-script@v5
+#      with:
+#        script: |
+#          github.rest.git.createRef({
+#            owner: context.repo.owner,
+#            repo: context.repo.repo,
+#            ref: 'refs/tags/v${{env.semVer}}',
+#            sha: context.sha
+#          })
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    - name: Run tests
+      run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal

@@ -1,0 +1,77 @@
+next-version: 7.0.0 #
+branches:
+  master:
+    regex: ^master$|^main$
+    mode: ContinuousDelivery
+    tag: ''
+    increment: None
+    source-branches:
+      - feature
+      - release
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: true
+    pre-release-weight: 0
+  release:
+    regex: ^release(s)?[/-]
+    mode: ContinuousDelivery
+    tag: preview
+    increment: Inherit
+    source-branches:
+      - master
+      - dev
+      - release
+    tag-number-pattern: '[/-](?<number>\d+)[-/]'
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: true
+    pre-release-weight: 30000
+  feature:
+    regex: ^feature(s)?[/-]
+    mode: ContinuousDelivery
+    tag: useBranchName
+    increment: Inherit
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: false
+    tracks-release-branches: false
+    is-release-branch: false
+  pull-request:
+    regex: ^(pull|pull\-requests|pr|merge)[/-]
+    mode: ContinuousDelivery
+    tag: pr
+    increment: Inherit
+    source-branches:
+      - dev
+      - master
+      - release
+      - feature
+      - support
+      - hotfix
+    tag-number-pattern: '[/-](?<number>\d+)[-/]'
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: false
+    tracks-release-branches: false
+    is-release-branch: false
+  hotfix:
+    regex: ^hotfix(es)?[/-]
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    source-branches: [master]
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: true
+  dev:
+    regex: ^dev(elop)?(ment)?$
+    mode: ContinuousDeployment
+    tag: dev
+    increment: Minor
+    source-branches: [master]
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: false
+    pre-release-weight: 40000
