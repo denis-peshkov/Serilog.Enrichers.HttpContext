@@ -13,15 +13,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Enrichers.HttpConte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{931596BA-056D-4E8C-9FED-6C60C0D1AB83}"
 	ProjectSection(SolutionItems) = preProject
-		Serilog.Enrichers.HttpContext.nuspec = Serilog.Enrichers.HttpContext.nuspec
+		config.nuspec = config.nuspec
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
+		GitVersion.yml = GitVersion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{A170BD74-8542-4880-BC6F-283D03C6AA6D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApp", "sample\SampleWebApp\SampleWebApp.csproj", "{3C3C0104-969D-4FA3-B5DE-8A8A0A91E455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8AFA7511-F7FF-4953-8E03-A004D36BEFA8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
