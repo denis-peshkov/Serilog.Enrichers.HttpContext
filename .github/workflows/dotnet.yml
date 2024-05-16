@@ -66,10 +66,19 @@ jobs:
       - name: ref
         run: echo "github.head_ref 1 ${{ github.head_ref }} 2 $GITHUB_REF 3 ${{ github.ref }}"
 
+#      - name: Create Tag
+#        uses: rickstaa/action-create-tag@v1.7.2
+#        with:
+#          tag: v${{ env.semVer }}
+
       - name: Create git Tag
         if: ${{ contains('refs/heads/hotfix', github.ref) || contains('refs/heads/hotfix', github.ref) || contains('refs/heads/master', github.ref) }}
+#        if: ${{ contains(fromJson('["refs/heads/master", "refs/heads/release", "refs/heads/hotfix"]'), github.ref) }}
         run: |
           git tag v${{ env.semVer }}
+
+#      - name: Push git tag
+#        run: git push origin v${{ env.semVer }}
 
       - name: Push git Tag
         if: ${{ contains(fromJson('["refs/heads/master", "refs/heads/release", "refs/heads/hotfix"]'), github.ref) }}
@@ -78,6 +87,23 @@ jobs:
           git config --global user.email 'denis.peshkov@outlook.com'
           git remote set-url origin https://x-access-token:${{ secrets.TAGTOKEN }}@github.com/${{ github.repository }}
           git push origin v${{ env.semVer }}
+
+#      - name: Tag commit
+#        uses: tvdias/github-tagger@v0.0.2
+#        with:
+#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#          tag: "v${{ env.semVer }}"
+
+#      - name: Create tag
+#        uses: actions/github-script@v5
+#        with:
+#          script: |
+#            github.rest.git.createRef({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              ref: 'refs/tags/v${{env.semVer}}',
+#              sha: context.sha
+#            })
 
       - name: Nuget Push
         if: ${{ !startsWith(github.ref, 'refs/pull') }}
