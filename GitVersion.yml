@@ -54,7 +54,7 @@ branches:
     regex: ^(pull|pull\-requests|pr|merge)[/-]
     mode: ContinuousDelivery
     tag: pr
-    tag-number-pattern: '[/-](?<number>\d+)[-/]'
+    tag-number-pattern: '(\d+)'
     increment: None
     source-branches:
       - dev
