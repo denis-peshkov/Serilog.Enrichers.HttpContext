@@ -1,19 +1,19 @@
 ﻿namespace Serilog.Enrichers;
 
 /// <inheritdoc/>
-public class ClientHeaderEnricher : ILogEventEnricher
+public class RequestHeaderEnricher : ILogEventEnricher
 {
     private readonly string _clientHeaderItemKey;
     private readonly string _propertyName;
     private readonly string _headerKey;
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public ClientHeaderEnricher(string headerKey, string propertyName)
+    public RequestHeaderEnricher(string headerKey, string propertyName)
         : this(headerKey, propertyName, new HttpContextAccessor())
     {
     }
 
-    internal ClientHeaderEnricher(string headerKey, string propertyName, IHttpContextAccessor contextAccessor)
+    internal RequestHeaderEnricher(string headerKey, string propertyName, IHttpContextAccessor contextAccessor)
     {
         _headerKey = headerKey;
         _propertyName = string.IsNullOrWhiteSpace(propertyName)
@@ -23,7 +23,7 @@ public class ClientHeaderEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
-    internal ClientHeaderEnricher(IHttpContextAccessor contextAccessor)
+    internal RequestHeaderEnricher(IHttpContextAccessor contextAccessor)
     {
         _contextAccessor = contextAccessor;
     }

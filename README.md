@@ -61,7 +61,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithClientIp",
@@ -87,7 +87,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithCorrelationId",
@@ -114,7 +114,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithRequestHeader",
@@ -135,7 +135,7 @@ or
           "propertyName": "RequestLength"
         }
       }
-    ],
+    ]
   }
 }
 ```

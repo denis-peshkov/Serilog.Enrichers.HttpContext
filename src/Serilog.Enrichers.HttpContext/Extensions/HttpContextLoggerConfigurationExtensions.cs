@@ -60,6 +60,23 @@ public static class HttpContextLoggerConfigurationExtensions
     ///   Registers the HTTP request header enricher to enrich logs with the header value.
     /// </summary>
     /// <param name="enrichmentConfiguration">The enrichment configuration.</param>
+    /// <exception cref="ArgumentNullException">enrichmentConfiguration</exception>
+    /// <returns>The logger configuration so that multiple calls can be chained.</returns>
+    public static LoggerConfiguration WithRequestBody(
+        this LoggerEnrichmentConfiguration enrichmentConfiguration)
+    {
+        if (enrichmentConfiguration == null)
+        {
+            throw new ArgumentNullException(nameof(enrichmentConfiguration));
+        }
+
+        return enrichmentConfiguration.With(new RequestBodyEnricher());
+    }
+
+    /// <summary>
+    ///   Registers the HTTP request header enricher to enrich logs with the header value.
+    /// </summary>
+    /// <param name="enrichmentConfiguration">The enrichment configuration.</param>
     /// <param name="propertyName">The property name of log</param>
     /// <param name="headerName">The header name to log its value</param>
     /// <exception cref="ArgumentNullException">enrichmentConfiguration</exception>
@@ -80,24 +97,7 @@ public static class HttpContextLoggerConfigurationExtensions
             throw new ArgumentNullException(nameof(headerName));
         }
 
-        return enrichmentConfiguration.With(new ClientHeaderEnricher(headerName, propertyName));
-    }
-
-    /// <summary>
-    ///   Registers the HTTP request header enricher to enrich logs with the header value.
-    /// </summary>
-    /// <param name="enrichmentConfiguration">The enrichment configuration.</param>
-    /// <exception cref="ArgumentNullException">enrichmentConfiguration</exception>
-    /// <returns>The logger configuration so that multiple calls can be chained.</returns>
-    public static LoggerConfiguration WithRequestBody(
-        this LoggerEnrichmentConfiguration enrichmentConfiguration)
-    {
-        if (enrichmentConfiguration == null)
-        {
-            throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
-
-        return enrichmentConfiguration.With(new RequestBodyEnricher());
+        return enrichmentConfiguration.With(new RequestHeaderEnricher(headerName, propertyName));
     }
 
     /// <summary>
