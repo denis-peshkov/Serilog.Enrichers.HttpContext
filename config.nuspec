@@ -14,7 +14,7 @@
 		<icon>icon.png</icon>
 		<releaseNotes>
 		</releaseNotes>
-		<description>Enriches Serilog events with client IP, Correlation Id, RequestBody, RequestQuery, HTTP request headers and information of the memory usage.</description>
+		<description>Enriches Serilog events with client IP, Correlation Id, RequestBody, RequestQuery, HTTP request headers and information of the MemoryUsage.</description>
 		<tags>serilog enrichers enricher ip correlationid request header body query memory memoryusage</tags>
 		<copyright>Copyright 2024</copyright>
 		<dependencies>
