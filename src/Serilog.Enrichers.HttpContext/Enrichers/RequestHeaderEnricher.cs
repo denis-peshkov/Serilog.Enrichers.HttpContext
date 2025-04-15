@@ -1,29 +1,29 @@
 ﻿namespace Serilog.Enrichers;
 
 /// <inheritdoc/>
-public class ClientHeaderEnricher : ILogEventEnricher
+public class RequestHeaderEnricher : ILogEventEnricher
 {
-    private readonly string _clientHeaderItemKey;
+    private readonly string _itemKey;
     private readonly string _propertyName;
     private readonly string _headerKey;
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public ClientHeaderEnricher(string headerKey, string propertyName)
+    public RequestHeaderEnricher(string headerKey, string propertyName)
         : this(headerKey, propertyName, new HttpContextAccessor())
     {
     }
 
-    internal ClientHeaderEnricher(string headerKey, string propertyName, IHttpContextAccessor contextAccessor)
+    internal RequestHeaderEnricher(string headerKey, string propertyName, IHttpContextAccessor contextAccessor)
     {
         _headerKey = headerKey;
         _propertyName = string.IsNullOrWhiteSpace(propertyName)
             ? headerKey.Replace("-", "")
             : propertyName;
-        _clientHeaderItemKey = $"Serilog_{headerKey}";
+        _itemKey = $"Serilog_{headerKey}";
         _contextAccessor = contextAccessor;
     }
 
-    internal ClientHeaderEnricher(IHttpContextAccessor contextAccessor)
+    internal RequestHeaderEnricher(IHttpContextAccessor contextAccessor)
     {
         _contextAccessor = contextAccessor;
     }
@@ -32,9 +32,10 @@ public class ClientHeaderEnricher : ILogEventEnricher
     {
         var httpContext = _contextAccessor.HttpContext;
         if (httpContext == null)
+        {
             return;
-
-        if (httpContext.Items[_clientHeaderItemKey] is LogEventProperty logEventProperty)
+        }
+        if (httpContext.Items[_itemKey] is LogEventProperty logEventProperty)
         {
             logEvent.AddPropertyIfAbsent(logEventProperty);
             return;
@@ -44,8 +45,8 @@ public class ClientHeaderEnricher : ILogEventEnricher
         headerValue = string.IsNullOrWhiteSpace(headerValue) ? null : headerValue;
 
         var logProperty = new LogEventProperty(_propertyName, new ScalarValue(headerValue));
-        httpContext.Items.Add(_clientHeaderItemKey, logProperty);
+        httpContext.Items.Add(_itemKey, logProperty);
 
-        logEvent.AddPropertyIfAbsent(logProperty);
+        logEvent.AddOrUpdateProperty(logProperty);
     }
 }

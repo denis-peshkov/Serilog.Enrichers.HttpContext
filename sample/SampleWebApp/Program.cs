@@ -8,7 +8,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
-    .Enrich.FromLogContext());
+    .Enrich.FromLogContext()
+);
 
 var app = builder.Build();
 
@@ -18,6 +19,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogMemoryUsageExact();
 
 var summaries = new[]
 {
@@ -41,6 +44,10 @@ app.MapGet("/weatherforecast", () =>
 app.MapPost("/weatherforecast", (context) =>
     {
         var t = Encoding.UTF8.GetString(context.Request.BodyReader.ReadAtLeastAsync(0).Result.Buffer);
+
+        var somethingThatConsumesMemory = Enumerable.Range(0, 10000000).ToArray();
+        var logger = app.Services.GetService<ILogger>();
+        logger.Information("www");
 
         return Task.FromResult(t);
     })
