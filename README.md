@@ -135,7 +135,7 @@ or
           "propertyName": "RequestLength"
         }
       }
-    ],
+    ]
   }
 }
 ```

@@ -1,4 +1,4 @@
-next-version: 7.0.0 #
+next-version: 7.0.0 #.
 branches:
   master:
     regex: ^master$|^main$
@@ -54,7 +54,7 @@ branches:
     regex: ^(pull|pull\-requests|pr|merge)[/-]
     mode: ContinuousDelivery
     tag: pr
-    tag-number-pattern: '[/-](?<number>\d+)[-/]'
+    tag-number-pattern: '(\d+)'
     increment: None
     source-branches:
       - dev
