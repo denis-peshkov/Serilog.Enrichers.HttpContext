@@ -22,7 +22,7 @@ jobs:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Serilog.Enrichers.HttpContext.sln'
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # ubuntu-latest
 
     steps:
       - name: Checkout
