@@ -1,5 +1,5 @@
 # Serilog.Enrichers.HttpContext [![Nuget](https://img.shields.io/nuget/v/Serilog.Enrichers.HttpContext.svg)](https://nuget.org/packages/Serilog.Enrichers.HttpContext/)
-Enrich logs with client IP, Correlation Id, RequestBody, RequestQuery and HTTP request headers.
+Enriches Serilog events with client IP, Correlation Id, RequestBody, RequestQuery, HTTP request headers and information of the memory usage.
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
@@ -29,7 +29,7 @@ or in `appsettings.json` file:
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       "WithClientIp",
       "WithRequestBody",
@@ -61,7 +61,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithClientIp",
@@ -87,7 +87,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithCorrelationId",
@@ -114,7 +114,7 @@ or
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.ClientInfo" ],
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithRequestHeader",
@@ -168,7 +168,7 @@ namespace MyWebApp
         public Startup()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} CLient IP: {ClientIp} Correlation Id: {CorrelationId} header-name: {headername} {Message:lj}{NewLine}{Exception}")
                 .Enrich.WithClientIp()
                 .Enrich.WithCorrelationId()
