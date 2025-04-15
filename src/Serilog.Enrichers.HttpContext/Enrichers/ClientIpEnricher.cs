@@ -3,8 +3,8 @@ namespace Serilog.Enrichers
 {
     public class ClientIpEnricher : ILogEventEnricher
     {
-        private const string IP_ADDRESS_ITEM_KEY = "Serilog_ClientIp";
-        private const string IP_ADDRESS_PROPERTY_NAME = "ClientIp";
+        private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
+        private const string PROPERTY_NAME = "ClientIp";
         private readonly string _forwardHeaderKey;
 
         private readonly IHttpContextAccessor _contextAccessor;
@@ -26,7 +26,7 @@ namespace Serilog.Enrichers
             if (httpContext == null)
                 return;
 
-            if (httpContext.Items[IP_ADDRESS_ITEM_KEY] is LogEventProperty logEventProperty)
+            if (httpContext.Items[ITEM_KEY] is LogEventProperty logEventProperty)
             {
                 logEvent.AddPropertyIfAbsent(logEventProperty);
                 return;
@@ -37,8 +37,8 @@ namespace Serilog.Enrichers
             if (string.IsNullOrWhiteSpace(ipAddress))
                 ipAddress = "unknown";
 
-            var ipAddressProperty = new LogEventProperty(IP_ADDRESS_PROPERTY_NAME, new ScalarValue(ipAddress));
-            httpContext.Items.Add(IP_ADDRESS_ITEM_KEY, ipAddressProperty);
+            var ipAddressProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(ipAddress));
+            httpContext.Items.Add(ITEM_KEY, ipAddressProperty);
 
             logEvent.AddPropertyIfAbsent(ipAddressProperty);
         }

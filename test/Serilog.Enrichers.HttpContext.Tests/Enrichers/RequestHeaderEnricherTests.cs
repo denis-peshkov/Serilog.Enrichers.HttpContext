@@ -1,10 +1,10 @@
 ﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
-public class ClientHeaderEnricherTests
+public class RequestHeaderEnricherTests
 {
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public ClientHeaderEnricherTests()
+    public RequestHeaderEnricherTests()
     {
         var httpContext = new DefaultHttpContext();
         _contextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -20,7 +20,7 @@ public class ClientHeaderEnricherTests
         var headerValue = Guid.NewGuid().ToString();
         _contextAccessor.HttpContext.Request.Headers.Add(headerKey, headerValue);
 
-        var clientHeaderEnricher = new ClientHeaderEnricher(headerKey, propertyName, _contextAccessor);
+        var clientHeaderEnricher = new RequestHeaderEnricher(headerKey, propertyName, _contextAccessor);
 
         LogEvent evt = null;
         var log = new LoggerConfiguration()
@@ -46,7 +46,7 @@ public class ClientHeaderEnricherTests
         var headerValue = Guid.NewGuid().ToString();
         _contextAccessor.HttpContext.Request.Headers.Add(headerKey, headerValue);
 
-        var clientHeaderEnricher = new ClientHeaderEnricher(headerKey, propertyName:string.Empty, _contextAccessor);
+        var clientHeaderEnricher = new RequestHeaderEnricher(headerKey, propertyName:string.Empty, _contextAccessor);
 
         LogEvent evt = null;
         var log = new LoggerConfiguration()
@@ -75,8 +75,8 @@ public class ClientHeaderEnricherTests
         _contextAccessor.HttpContext.Request.Headers.Add(headerKey1, headerValue1);
         _contextAccessor.HttpContext.Request.Headers.Add(headerKey2, headerValue2);
 
-        var clientHeaderEnricher1 = new ClientHeaderEnricher(headerKey1, propertyName:string.Empty, _contextAccessor);
-        var clientHeaderEnricher2 = new ClientHeaderEnricher(headerKey2, propertyName:string.Empty, _contextAccessor);
+        var clientHeaderEnricher1 = new RequestHeaderEnricher(headerKey1, propertyName:string.Empty, _contextAccessor);
+        var clientHeaderEnricher2 = new RequestHeaderEnricher(headerKey2, propertyName:string.Empty, _contextAccessor);
 
         LogEvent evt = null;
         var log = new LoggerConfiguration()
@@ -102,7 +102,7 @@ public class ClientHeaderEnricherTests
     {
         // Arrange
         var headerKey = "RequestId";
-        var clientHeaderEnricher = new ClientHeaderEnricher(headerKey, propertyName:string.Empty, _contextAccessor);
+        var clientHeaderEnricher = new RequestHeaderEnricher(headerKey, propertyName:string.Empty, _contextAccessor);
 
         LogEvent evt = null;
         var log = new LoggerConfiguration()

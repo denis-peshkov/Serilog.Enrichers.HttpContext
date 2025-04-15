@@ -29,31 +29,35 @@ public static class HttpContextLoggerConfigurationExtensions
     }
 
     /// <summary>
-    ///   Registers the correlation id enricher to enrich logs with correlation id with
-    ///   'x-correlation-id' header information.
+    ///   Registers the memory enricher to enrich logs with used memory in process.
     /// </summary>
-    /// <param name="enrichmentConfiguration">The enrichment configuration.</param>
-    /// <param name="headerName">
-    ///   Set the 'X-Correlation-Id' header in case if service is behind proxy server. Default value
-    ///   is 'x-correlation-id'.
-    /// </param>
-    /// <param name="addValueIfHeaderAbsence">
-    ///   Add generated correlation id value if correlation id header not available in
-    ///   <see cref="HttpContext"/> header collection.
-    /// </param>
     /// <exception cref="ArgumentNullException">enrichmentConfiguration</exception>
     /// <returns>The logger configuration so that multiple calls can be chained.</returns>
-    public static LoggerConfiguration WithCorrelationId(
-        this LoggerEnrichmentConfiguration enrichmentConfiguration,
-        string headerName = "x-correlation-id",
-        bool addValueIfHeaderAbsence = false)
+    public static LoggerConfiguration WithMemoryUsage(
+        this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
         if (enrichmentConfiguration == null)
         {
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
         }
 
-        return enrichmentConfiguration.With(new CorrelationIdEnricher(headerName, addValueIfHeaderAbsence));
+        return enrichmentConfiguration.With(new MemoryUsageEnricher());
+    }
+
+    /// <summary>
+    ///   Registers the memory enricher to enrich logs with used memory in process exact value.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">enrichmentConfiguration</exception>
+    /// <returns>The logger configuration so that multiple calls can be chained.</returns>
+    public static LoggerConfiguration WithMemoryUsageExact(
+        this LoggerEnrichmentConfiguration enrichmentConfiguration)
+    {
+        if (enrichmentConfiguration == null)
+        {
+            throw new ArgumentNullException(nameof(enrichmentConfiguration));
+        }
+
+        return enrichmentConfiguration.With(new MemoryUsageExactEnricher());
     }
 
     /// <summary>
@@ -80,7 +84,7 @@ public static class HttpContextLoggerConfigurationExtensions
             throw new ArgumentNullException(nameof(headerName));
         }
 
-        return enrichmentConfiguration.With(new ClientHeaderEnricher(headerName, propertyName));
+        return enrichmentConfiguration.With(new RequestHeaderEnricher(headerName, propertyName));
     }
 
     /// <summary>
