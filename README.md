@@ -1,5 +1,5 @@
 # Serilog.Enrichers.HttpContext [![Nuget](https://img.shields.io/nuget/v/Serilog.Enrichers.HttpContext.svg)](https://nuget.org/packages/Serilog.Enrichers.HttpContext/)
-Enrich logs with client IP, Correlation Id, RequestBody, RequestQuery and HTTP request headers.
+Enriches Serilog events with client IP, Correlation Id, RequestBody, RequestQuery, HTTP request headers and information of the MemoryUsage.
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
@@ -16,7 +16,8 @@ Apply the enricher to your `LoggerConfiguration` in code:
 ```csharp
 Log.Logger = new LoggerConfiguration()
     .Enrich.WithClientIp()
-    .Enrich.WithCorrelationId()
+    .Enrich.WithMemoryUsage()
+    .Enrich.WithMemoryUsageExact()
     .Enrich.WithRequestBody()
     .Enrich.WithRequestQuery()
     .Enrich.WithRequestHeader("Header-Name1")
@@ -32,9 +33,18 @@ or in `appsettings.json` file:
     "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       "WithClientIp",
+      "WithMemoryUsage",
+      "WithMemoryUsageExact",
       "WithRequestBody",
       "WithRequestQuery",
-      "WithCorrelationId",
+      "WithRequestHeader",
+      {
+        "Name": "WithRequestHeader",
+        "Args": {
+          "headerName": "X-Correlation-Id",
+          "propertyName": "CorrelationId"
+        }
+      },
       {
           "Name": "WithRequestHeader",
           "Args": { "headerName": "User-Agent"}
@@ -47,7 +57,6 @@ or in `appsettings.json` file:
 }
 ```
 
----
 
 ### ClientIp
 For `ClientIp` enricher you can configure the `x-forwarded-for` header if the proxy server uses a different header to forward the IP address.
@@ -70,43 +79,21 @@ or
         }
       }
     ],
+    "WriteTo": [
+      { "Name": "Console" }
+    ]
   }
 }
 ```
-### CorrelationId
-For `CorrelationId` enricher you can:
-- Configure the header name and default header name is `x-correlation-id`
-- Set value for correlation id when the header is not available in request header collection and the default value is false
-```csharp
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithCorrelationId(headerName: "correlation-id", addValueIfHeaderAbsence: true)
-    ...
-```
-or
-```json
-{
-  "Serilog": {
-    "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.HttpContext" ],
-    "Enrich": [
-      {
-        "Name": "WithCorrelationId",
-        "Args": {
-          "headerName": "correlation-id",
-          "addValueIfHeaderAbsence": true
-        }
-      }
-    ],
-  }
-}
-```
+
+
 ### RequestHeader
 You can use multiple `WithRequestHeader` to log different request headers. `WithRequestHeader` accepts two parameters; The first parameter `headerName` is the header name to log 
 and the second parameter is `propertyName` which is the log property name.
 ```csharp
 Log.Logger = new LoggerConfiguration()
-    .Enrich.WithRequestHeader(headerName: "header-name-1")
-    .Enrich.WithRequestHeader(headerName: "header-name-2", propertyName: "SomeHeaderName")
+    .Enrich.WithRequestHeader(headerName: "header-name")
+    .Enrich.WithRequestHeader(headerName: "Content-Length", propertyName: "RequestLength")
     ...
 ```
 or
@@ -125,7 +112,7 @@ or
       {
         "Name": "WithRequestHeader",
         "Args": {
-          "headerName": "Connection"
+          "headerName": "header-name"
         }
       },
       {
@@ -168,14 +155,15 @@ namespace MyWebApp
         public Startup()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} CLient IP: {ClientIp} Correlation Id: {CorrelationId} header-name: {headername} {Message:lj}{NewLine}{Exception}")
                 .Enrich.WithClientIp()
-                .Enrich.WithCorrelationId()
+                .Enrich.WithMemoryUsage()
+                .Enrich.WithMemoryUsageExact()
                 .Enrich.WithRequestBody()
                 .Enrich.WithRequestQuery()
                 .Enrich.WithRequestHeader("header-name")
-                .Enrich.WithRequestHeader("another-header-name", "SomePropertyName")
+                .Enrich.WithRequestHeader("another-header-name", "AnotherHeaderNameNewName")
                 .CreateLogger();
         }
 

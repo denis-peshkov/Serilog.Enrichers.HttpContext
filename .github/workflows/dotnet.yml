@@ -22,7 +22,7 @@ jobs:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Serilog.Enrichers.HttpContext.sln'
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # ubuntu-latest
 
     steps:
       - name: Checkout
@@ -30,10 +30,22 @@ jobs:
         with:
           fetch-depth: 0
 
+#      - name: Hello world action step
+#        id: hello
+#        uses: denis-peshkov/update-nuspec-action@master
+#        with:
+#          dir: './test'
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      #      - name: Install Mono
+      #        run: |
+      #          apt-get install -y mono-runtime
+      #          apt-get install -y mono-complete
+      #          apt-get install -y nuget
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2.0.0
@@ -51,14 +63,35 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Restore dependencies with NuGet
-        run: nuget restore $SOLUTION
+#      - name: Restore dependencies with NuGet
+#        run: nuget restore $SOLUTION
 
       - name: Build
         run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
 
       - name: Run tests
         run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarcloud-github-action@v5 # Ex: v4.0.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+        with:
+          #          projectBaseDir: app/
+          #          args: >
+          #            -Dsonar.organization=peshkov
+          #            -Dsonar.projectKey=Serilog.Enrichers.HttpContext
+          #            -Dsonar.python.coverage.reportPaths=coverage.xml
+          #            -Dsonar.sources=Serilog.Enrichers.HttpContext/
+          #            -Dsonar.tests=tests/
+          #            -Dsonar.test.exclusions=tests/**
+          #            -Dsonar.verbose=true
+          args: >
+            -Dsonar.organization=peshkov
+            -Dsonar.projectKey=Serilog.Enrichers.HttpContext
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=src/Serilog.Enrichers.HttpContext/
+            -Dsonar.verbose=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Nuget Pack
         run: nuget pack config.nuspec -Symbols -Version ${{ env.semVer }}

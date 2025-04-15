@@ -3,7 +3,7 @@
 /// <inheritdoc/>
 public class RequestHeaderEnricher : ILogEventEnricher
 {
-    private readonly string _clientHeaderItemKey;
+    private readonly string _itemKey;
     private readonly string _propertyName;
     private readonly string _headerKey;
     private readonly IHttpContextAccessor _contextAccessor;
@@ -19,7 +19,7 @@ public class RequestHeaderEnricher : ILogEventEnricher
         _propertyName = string.IsNullOrWhiteSpace(propertyName)
             ? headerKey.Replace("-", "")
             : propertyName;
-        _clientHeaderItemKey = $"Serilog_{headerKey}";
+        _itemKey = $"Serilog_{headerKey}";
         _contextAccessor = contextAccessor;
     }
 
@@ -32,9 +32,10 @@ public class RequestHeaderEnricher : ILogEventEnricher
     {
         var httpContext = _contextAccessor.HttpContext;
         if (httpContext == null)
+        {
             return;
-
-        if (httpContext.Items[_clientHeaderItemKey] is LogEventProperty logEventProperty)
+        }
+        if (httpContext.Items[_itemKey] is LogEventProperty logEventProperty)
         {
             logEvent.AddPropertyIfAbsent(logEventProperty);
             return;
@@ -44,8 +45,8 @@ public class RequestHeaderEnricher : ILogEventEnricher
         headerValue = string.IsNullOrWhiteSpace(headerValue) ? null : headerValue;
 
         var logProperty = new LogEventProperty(_propertyName, new ScalarValue(headerValue));
-        httpContext.Items.Add(_clientHeaderItemKey, logProperty);
+        httpContext.Items.Add(_itemKey, logProperty);
 
-        logEvent.AddPropertyIfAbsent(logProperty);
+        logEvent.AddOrUpdateProperty(logProperty);
     }
 }
