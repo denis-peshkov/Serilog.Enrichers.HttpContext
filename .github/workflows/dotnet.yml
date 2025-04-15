@@ -88,7 +88,7 @@ jobs:
             -Dsonar.organization=peshkov
             -Dsonar.projectKey=Serilog.Enrichers.HttpContext
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.sources=Serilog.Enrichers.HttpContext/
+            -Dsonar.sources=src/Serilog.Enrichers.HttpContext/
             -Dsonar.verbose=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
