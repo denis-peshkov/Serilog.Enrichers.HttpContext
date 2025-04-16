@@ -29,7 +29,7 @@ or in `appsettings.json` file:
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       "WithClientIp",
@@ -69,7 +69,7 @@ or
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
@@ -100,7 +100,7 @@ or
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
