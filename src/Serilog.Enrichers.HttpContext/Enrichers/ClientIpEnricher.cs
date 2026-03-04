@@ -38,7 +38,7 @@ namespace Serilog.Enrichers
                 ipAddress = "unknown";
 
             var ipAddressProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(ipAddress));
-            httpContext.Items.Add(ITEM_KEY, ipAddressProperty);
+            httpContext.Items[ITEM_KEY] = ipAddressProperty;
 
             logEvent.AddPropertyIfAbsent(ipAddressProperty);
         }
