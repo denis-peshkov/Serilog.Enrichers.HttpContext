@@ -36,6 +36,6 @@ public class RequestQueryEnricher : ILogEventEnricher
         var requestQueryProperty = new LogEventProperty(PROPERTY_NAME, new ScalarValue(requestQuery));
         logEvent.AddOrUpdateProperty(requestQueryProperty);
 
-        httpContext.Items.Add(ITEM_KEY, requestQueryProperty);
+        httpContext.Items[ITEM_KEY] = requestQueryProperty;
     }
 }

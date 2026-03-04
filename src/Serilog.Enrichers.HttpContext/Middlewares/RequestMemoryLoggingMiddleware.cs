@@ -17,7 +17,7 @@ public class RequestMemoryLoggingMiddleware
         var startMemory = Process.GetCurrentProcess().WorkingSet64;
 
         var requestQueryProperty = new LogEventProperty(MemoryUsageExactEnricher.PROPERTY_NAME, new ScalarValue(startMemory));
-        httpContext.Items.Add(MemoryUsageExactEnricher.ITEM_KEY, requestQueryProperty);
+        httpContext.Items[MemoryUsageExactEnricher.ITEM_KEY] = requestQueryProperty;
 
         await _next(httpContext);
     }
