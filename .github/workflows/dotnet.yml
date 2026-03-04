@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - master
+  workflow_dispatch: # <-- вот это даёт ручной запуск
 
 jobs:
   build:
