@@ -1,16 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnablePreviewFeatures>false</EnablePreviewFeatures>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU</Platforms>
+    <NoWarn>1701;1702;1591;CS8618;</NoWarn>
     <IsPackable>false</IsPackable>
+    <PackageProjectUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</RepositoryUrl>
   </PropertyGroup>
 
+  <Target Name="DeleteBinObjFolders" BeforeTargets="Clean">
+    <RemoveDir Directories=".\bin" />
+    <Delete Files=".\obj\**\*.cs" />
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageReference Include="nsubstitute" Version="5.1.0" />
-    <PackageReference Include="xunit" Version="2.7.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7" />
-    <PackageReference Include="coverlet.collector" Version="6.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="nsubstitute" Version="5.3.0" />
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>

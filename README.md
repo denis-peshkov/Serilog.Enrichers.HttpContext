@@ -1,5 +1,8 @@
 # Serilog.Enrichers.HttpContext [![Nuget](https://img.shields.io/nuget/v/Serilog.Enrichers.HttpContext.svg)](https://nuget.org/packages/Serilog.Enrichers.HttpContext/)
-Enriches Serilog events with client IP, Correlation Id, RequestBody, RequestQuery, HTTP request headers and information of the MemoryUsage.
+
+Enriches Serilog events with client IP, RequestBody, RequestQuery, HTTP request headers and memory usage. Correlation Id can be added via `WithRequestHeader("X-Correlation-Id", "CorrelationId")`.
+
+**Supported frameworks:** .NET Standard 2.1, .NET 6, .NET 7, .NET 8
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
@@ -25,7 +28,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 ```
 
-or in `appsettings.json` file:
+or in `appsettings.json` file (requires [Serilog.Settings.Configuration](https://www.nuget.org/packages/Serilog.Settings.Configuration/) or [Serilog.AspNetCore](https://www.nuget.org/packages/Serilog.AspNetCore/)):
 ```json
 {
   "Serilog": {
@@ -37,7 +40,6 @@ or in `appsettings.json` file:
       "WithMemoryUsageExact",
       "WithRequestBody",
       "WithRequestQuery",
-      "WithRequestHeader",
       {
         "Name": "WithRequestHeader",
         "Args": {
@@ -46,8 +48,8 @@ or in `appsettings.json` file:
         }
       },
       {
-          "Name": "WithRequestHeader",
-          "Args": { "headerName": "User-Agent"}
+        "Name": "WithRequestHeader",
+        "Args": { "headerName": "User-Agent" }
       }
     ],
     "WriteTo": [
@@ -57,64 +59,193 @@ or in `appsettings.json` file:
 }
 ```
 
+---
 
-### ClientIp
-For `ClientIp` enricher you can configure the `x-forwarded-for` header if the proxy server uses a different header to forward the IP address.
+## Enricher Configuration
+
+### WithClientIp
+
+Adds the `ClientIp` property — client IP address. When behind a proxy, uses the configured header to determine the real IP. Returns `"unknown"` when the IP cannot be determined.
+
+| Parameter    | Type   | Default             | Description                                 |
+|--------------|--------|---------------------|---------------------------------------------|
+| `headerName` | string | `"x-forwarded-for"` | Proxy header name containing the IP address |
+
+**Code:**
 ```csharp
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithClientIp(headerName: "CF-Connecting-IP")
-    ...
+.Enrich.WithClientIp()
+.Enrich.WithClientIp(headerName: "CF-Connecting-IP")
 ```
-or
+
+**appsettings.json:**
+```json
+"WithClientIp"
+```
+or with parameters:
+```json
+{
+  "Name": "WithClientIp",
+  "Args": { "headerName": "CF-Connecting-IP" }
+}
+```
+
+Full example for custom proxy header:
 ```json
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.HttpContext" ],
+    "Using": [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithClientIp",
-        "Args": {
-          "headerName": "CF-Connecting-IP"
-        }
+        "Args": { "headerName": "CF-Connecting-IP" }
       }
     ],
-    "WriteTo": [
-      { "Name": "Console" }
-    ]
+    "WriteTo": [ { "Name": "Console" } ]
   }
 }
 ```
 
+### WithMemoryUsage
 
-### RequestHeader
-You can use multiple `WithRequestHeader` to log different request headers. `WithRequestHeader` accepts two parameters; The first parameter `headerName` is the header name to log 
-and the second parameter is `propertyName` which is the log property name.
+Adds the `MemoryUsage` property — process memory usage in bytes. Works in any context (does not require HTTP request).
+
+**Code:**
 ```csharp
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithRequestHeader(headerName: "header-name")
-    .Enrich.WithRequestHeader(headerName: "Content-Length", propertyName: "RequestLength")
-    ...
+.Enrich.WithMemoryUsage()
 ```
-or
+
+**appsettings.json:**
+```json
+"WithMemoryUsage"
+```
+
+### WithMemoryUsageExact
+
+Adds the `MemoryUsageExact` property — memory increase since the start of the request (in bytes).
+
+**Required:** You must add `app.UseSerilogMemoryUsageExact()` middleware to the pipeline. Place it early, before request handlers (e.g. `MapGet`, `MapControllers`).
+
+**Enricher registration**
+
+Code:
+```csharp
+.Enrich.WithMemoryUsageExact()
+```
+
+appsettings.json:
+```json
+"WithMemoryUsageExact"
+```
+
+**Middleware registration**
+
+`Program.cs` (minimal hosting):
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services));
+
+var app = builder.Build();
+app.UseSerilogMemoryUsageExact();
+app.MapGet("/", () => "Hello");
+app.Run();
+```
+
+`Startup.cs` (in `Configure` method):
+```csharp
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+    loggerFactory.AddSerilog();
+    app.UseSerilogMemoryUsageExact();
+    app.UseRouting();
+    app.UseEndpoints(endpoints => { /* ... */ });
+}
+```
+
+### WithRequestBody
+
+Adds the `RequestBody` property — HTTP request body. **Note:** If controllers or model binding read the body before logging, add middleware at the start of the pipeline to enable buffering:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    context.Request.EnableBuffering();
+    await next();
+});
+```
+
+**Code:**
+```csharp
+.Enrich.WithRequestBody()
+```
+
+**appsettings.json:**
+```json
+"WithRequestBody"
+```
+
+### WithRequestQuery
+
+Adds the `RequestQuery` property — HTTP request query string.
+
+**Code:**
+```csharp
+.Enrich.WithRequestQuery()
+```
+
+**appsettings.json:**
+```json
+"WithRequestQuery"
+```
+
+### WithRequestHeader
+
+You can use multiple `WithRequestHeader` to log different request headers. `WithRequestHeader` accepts two parameters: the first parameter `headerName` is the header name to log, and the second parameter `propertyName` is the log property name.
+
+| Parameter      | Type   | Required | Description                                                         |
+|----------------|--------|----------|---------------------------------------------------------------------|
+| `headerName`   | string | yes      | HTTP header name                                                    |
+| `propertyName` | string | no       | Log property name (if not specified — `headerName` without hyphens) |
+
+When the header is absent, the property value is `null`.
+
+**Code:**
+```csharp
+.Enrich.WithRequestHeader("User-Agent")
+.Enrich.WithRequestHeader(headerName: "Content-Length", propertyName: "RequestLength")
+.Enrich.WithRequestHeader("X-Correlation-Id", "CorrelationId")
+```
+
+**appsettings.json:**
+```json
+{
+  "Name": "WithRequestHeader",
+  "Args": { "headerName": "User-Agent" }
+}
+```
+or with custom property name:
+```json
+{
+  "Name": "WithRequestHeader",
+  "Args": {
+    "headerName": "X-Correlation-Id",
+    "propertyName": "CorrelationId"
+  }
+}
+```
+
+Full example with multiple headers:
 ```json
 {
   "Serilog": {
     "MinimumLevel": "Debug",
-    "Using":  [ "Serilog.Enrichers.HttpContext" ],
+    "Using": [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
-      {
-        "Name": "WithRequestHeader",
-        "Args": {
-          "headerName": "User-Agent"
-        }
-      },
-      {
-        "Name": "WithRequestHeader",
-        "Args": {
-          "headerName": "header-name"
-        }
-      },
+      { "Name": "WithRequestHeader", "Args": { "headerName": "User-Agent" } },
+      { "Name": "WithRequestHeader", "Args": { "headerName": "header-name" } },
       {
         "Name": "WithRequestHeader",
         "Args": {
@@ -122,13 +253,16 @@ or
           "propertyName": "RequestLength"
         }
       }
-    ]
+    ],
+    "WriteTo": [ { "Name": "Console" } ]
   }
 }
 ```
 
 #### Note
+
 To include logged headers in `OutputTemplate`, the header name without `-` should be used if you haven't set the log property name. For example, if the header name is `User-Agent`, you should use `UserAgent`.
+
 ```csharp
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -136,8 +270,14 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} {UserAgent} {Message:lj}{NewLine}{Exception}")
 ```
 
+---
+
 ## Installing into an ASP.NET Core Web Application
-You need to register the `IHttpContextAccessor` singleton so the enrichers have access to the requests `HttpContext` to extract client IP and client agent.
+
+You need to register the `IHttpContextAccessor` singleton so the enrichers have access to the requests `HttpContext`. Without it, `WithClientIp`, `WithRequestBody`, `WithRequestQuery`, `WithRequestHeader`, and `WithMemoryUsageExact` will not add properties when logging outside a request context or when `HttpContext` is unavailable.
+
+**If you use `WithMemoryUsageExact`**, you must add the `app.UseSerilogMemoryUsageExact()` middleware early in the pipeline (before request handlers) to capture memory at the start of each request.
+
 This is what your `Startup` class should contain in order for this enricher to work as expected:
 
 ```cs
@@ -156,7 +296,7 @@ namespace MyWebApp
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} CLient IP: {ClientIp} Correlation Id: {CorrelationId} header-name: {headername} {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss}] {Level:u3} Client IP: {ClientIp} Correlation Id: {CorrelationId} header-name: {headername} {Message:lj}{NewLine}{Exception}")
                 .Enrich.WithClientIp()
                 .Enrich.WithMemoryUsage()
                 .Enrich.WithMemoryUsageExact()
@@ -181,8 +321,25 @@ namespace MyWebApp
         {
             // ...
             loggerFactory.AddSerilog();
+            app.UseSerilogMemoryUsageExact();  // Required for WithMemoryUsageExact enricher
             // ...
         }
     }
 }
+```
+
+For minimal hosting (`Program.cs` with `WebApplication`):
+
+```csharp
+builder.Services.AddHttpContextAccessor();
+
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services));
+
+var app = builder.Build();
+// ...
+app.UseSerilogMemoryUsageExact();  // Required for WithMemoryUsageExact enricher
+// ...
+app.Run();
 ```
