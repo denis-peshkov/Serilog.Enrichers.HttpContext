@@ -1,39 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
     <LangVersion>11</LangVersion>
     <RootNamespace>Serilog</RootNamespace>
-    <EmbedAllSources>true</EmbedAllSources>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnablePreviewFeatures>false</EnablePreviewFeatures>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
+    <NoWarn>1701;1702;1591;CS8618;</NoWarn>
+    <PackageProjectUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</RepositoryUrl>
   </PropertyGroup>
 
   <Target Name="DeleteBinObjFolders" BeforeTargets="Clean">
     <RemoveDir Directories=".\bin" />
+    <Delete Files=".\obj\**\*.cs" />
   </Target>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;CA1862;CS8618</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;CA1862;CS8618</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>NETCORE;NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+  <ItemGroup>
+    <InternalsVisibleTo Include="Serilog.Enrichers.HttpContext.Tests" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.22" />
     <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.1'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

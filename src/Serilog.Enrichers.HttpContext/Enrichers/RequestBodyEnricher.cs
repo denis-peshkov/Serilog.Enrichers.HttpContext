@@ -43,6 +43,6 @@ public class RequestBodyEnricher : ILogEventEnricher
         var requestBodyProperty = propertyFactory.CreateProperty(PROPERTY_NAME, requestBody);
         logEvent.AddOrUpdateProperty(requestBodyProperty);
 
-        httpContext.Items.Add(ITEM_KEY, requestBodyProperty);
+        httpContext.Items[ITEM_KEY] = requestBodyProperty;
     }
 }

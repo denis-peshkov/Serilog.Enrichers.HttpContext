@@ -7,20 +7,19 @@ on:
   push:
     branches:
       - master
-      - dev
       - hotfix/*
       - release/*
-      - feature/*
   pull_request:
     branches:
       - master
+  workflow_dispatch: # <-- вот это даёт ручной запуск
 
 jobs:
   build:
 
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'Serilog.Enrichers.HttpContext.sln'
+      SOLUTION: 'Serilog.Enrichers.HttpContext.slnx'
 
     runs-on: ubuntu-22.04 # ubuntu-latest
 
@@ -39,7 +38,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
 
       #      - name: Install Mono
       #        run: |
