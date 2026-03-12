@@ -2,10 +2,9 @@ namespace Serilog.Enrichers;
 
 public class ClientIpEnricher : ILogEventEnricher
 {
-    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private const string PROPERTY_NAME = "ClientIp";
+    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private readonly string _forwardHeaderKey;
-
     private readonly IHttpContextAccessor _contextAccessor;
 
     public ClientIpEnricher(string forwardHeaderKey)

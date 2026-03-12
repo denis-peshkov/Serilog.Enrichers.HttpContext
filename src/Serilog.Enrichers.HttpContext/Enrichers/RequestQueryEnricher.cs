@@ -3,8 +3,8 @@
 /// <inheritdoc/>
 public class RequestQueryEnricher : ILogEventEnricher
 {
-    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private const string PROPERTY_NAME = "RequestQuery";
+    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private readonly IHttpContextAccessor _contextAccessor;
 
     public RequestQueryEnricher()
