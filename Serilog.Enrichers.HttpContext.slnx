@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/.github/workflows/">
+    <File Path=".github\workflows\dotnet.yml" />
+  </Folder>
+  <Folder Name="/assets/">
+    <File Path=".gitignore" />
+    <File Path="config.nuspec" />
+    <File Path="GitVersion.yml" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/sample/">
+    <Project Path="sample/SampleWebApp/SampleWebApp.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Serilog.Enrichers.HttpContext/Serilog.Enrichers.HttpContext.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Serilog.Enrichers.HttpContext.Tests/Serilog.Enrichers.HttpContext.Tests.csproj" />
+  </Folder>
+</Solution>

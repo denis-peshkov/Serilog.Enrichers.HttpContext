@@ -16,10 +16,10 @@ public class RequestHeaderEnricher : ILogEventEnricher
     internal RequestHeaderEnricher(string headerKey, string propertyName, IHttpContextAccessor contextAccessor)
     {
         _headerKey = headerKey;
+        _itemKey = $"Serilog_{headerKey}";
         _propertyName = string.IsNullOrWhiteSpace(propertyName)
             ? headerKey.Replace("-", "")
             : propertyName;
-        _itemKey = $"Serilog_{headerKey}";
         _contextAccessor = contextAccessor;
     }
 
@@ -44,8 +44,8 @@ public class RequestHeaderEnricher : ILogEventEnricher
         var headerValue = httpContext.Request.Headers[_headerKey].ToString();
         headerValue = string.IsNullOrWhiteSpace(headerValue) ? null : headerValue;
 
-        var logProperty = new LogEventProperty(_propertyName, new ScalarValue(headerValue));
-        httpContext.Items.Add(_itemKey, logProperty);
+        var logProperty = propertyFactory.CreateProperty(_propertyName, headerValue);
+        httpContext.Items[_itemKey] = logProperty;
 
         logEvent.AddOrUpdateProperty(logProperty);
     }

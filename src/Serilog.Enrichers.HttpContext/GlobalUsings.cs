@@ -5,7 +5,6 @@ global using System.Diagnostics;
 global using System.Text;
 global using System.IO;
 global using System.Linq;
-global using System.Runtime.CompilerServices;
 global using System.Threading.Tasks;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
