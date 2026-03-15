@@ -1,4 +1,4 @@
-﻿<Solution>
+<Solution>
   <Folder Name="/.github/workflows/">
     <File Path=".github\workflows\dotnet.yml" />
   </Folder>
