@@ -65,7 +65,7 @@ or in `appsettings.json` file (requires [Serilog.Settings.Configuration](https:/
 
 ### WithClientIp
 
-Adds the `ClientIp` property — client IP address. When behind a proxy, uses the configured header to determine the real IP. Returns `"unknown"` when the IP cannot be determined.
+Adds the `ClientIp` property — client IP address. By default uses `"x-forwarded-for"` header. When behind a proxy, uses the configured header to determine the real IP. Returns `"unknown"` when the IP cannot be determined.
 
 | Parameter    | Type   | Default             | Description                                 |
 |--------------|--------|---------------------|---------------------------------------------|
