@@ -43,17 +43,7 @@ public class ClientIpEnricher : ILogEventEnricher
         logEvent.AddPropertyIfAbsent(ipAddressProperty);
     }
 
-#if NETFULL
-        private string GetIpAddress()
-        {
-            var ipAddress = _contextAccessor.HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-            return !string.IsNullOrEmpty(ipAddress)
-                ? GetIpAddressFromProxy(ipAddress)
-                : _contextAccessor.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
-        }
-#else
-    private string GetIpAddress()
+    private string? GetIpAddress()
     {
         var ipAddress = _contextAccessor.HttpContext?.Request?.Headers[_forwardHeaderKey].FirstOrDefault();
 
@@ -61,7 +51,6 @@ public class ClientIpEnricher : ILogEventEnricher
             ? GetIpAddressFromProxy(ipAddress)
             : _contextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
     }
-#endif
 
     private string GetIpAddressFromProxy(string proxyFieldIpList)
     {
