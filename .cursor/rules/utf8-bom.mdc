@@ -1,0 +1,23 @@
+---
+description: UTF-8 BOM для .cs, .csproj, .sln — добавлять после правок
+globs: "**/*.{cs,csproj,sln}"
+alwaysApply: false
+---
+
+# UTF-8 BOM
+
+Файлы `.cs`, `.csproj`, `.sln` должны быть в UTF-8 с BOM (см. .editorconfig).
+
+Инструменты редактирования (search_replace, write) по умолчанию сохраняют UTF-8 без BOM и не учитывают .editorconfig.
+
+**После редактирования** этих файлов — запускай скрипт для добавления BOM:
+
+```bash
+python3 scripts/ensure-bom.py
+```
+
+Или для конкретных файлов:
+
+```bash
+python3 scripts/ensure-bom.py src/путь/к/файлу.cs
+```
