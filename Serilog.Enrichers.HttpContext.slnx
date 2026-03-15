@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/.cursor/" />
+  <Folder Name="/.cursor/rules/">
+    <File Path=".cursor/rules/utf8-bom.mdc" />
+  </Folder>
+  <Folder Name="/.github/" />
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/dotnet.yml" />
   </Folder>
@@ -12,6 +17,9 @@
   </Folder>
   <Folder Name="/sample/">
     <Project Path="sample/SampleWebApp/SampleWebApp.csproj" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="scripts/ensure-bom.py" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Serilog.Enrichers.HttpContext/Serilog.Enrichers.HttpContext.csproj" />

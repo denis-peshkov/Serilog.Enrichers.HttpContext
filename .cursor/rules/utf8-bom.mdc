@@ -1,7 +1,7 @@
 ---
 description: UTF-8 BOM для .cs, .csproj, .sln — добавлять после правок
 globs: "**/*.{cs,csproj,sln}"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # UTF-8 BOM
