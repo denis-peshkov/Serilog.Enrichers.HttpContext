@@ -13,9 +13,12 @@
 		<readme>docs\README.md</readme>
 		<icon>icon.png</icon>
 		<releaseNotes>
-			Enrichers: WithClientIp, WithMemoryUsage, WithMemoryUsageExact, WithRequestBody, WithRequestQuery, WithRequestHeader.
-			Supported frameworks: .NET Standard 2.1, .NET 6, .NET 7, .NET 8, .NET 9, .NET 10.
-			UseSerilogMemoryUsageExact() middleware required for WithMemoryUsageExact.
+Add .NET 9 and .NET 10 support.
+Update Microsoft.AspNetCore.Http to 2.3.9, Serilog to 4.3.1 (3.1.1 for net7.0).
+Fix nuspec duplicate key (targetFramework casing).
+Fix README: IWebHostEnvironment, supported frameworks.
+Add .editorconfig, UTF-8 BOM.
+Extended test coverage.
 		</releaseNotes>
 		<description>Enriches Serilog events with client IP, RequestBody, RequestQuery, HTTP request headers and memory usage. Correlation Id can be added via WithRequestHeader.</description>
 		<tags>serilog enrichers enricher ip correlationid request header body query memory memoryusage</tags>
