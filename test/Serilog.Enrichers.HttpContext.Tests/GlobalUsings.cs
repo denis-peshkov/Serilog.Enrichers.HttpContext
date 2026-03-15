@@ -14,4 +14,5 @@ global using Serilog.Events;
 global using Serilog.Configuration;
 global using Serilog.Enrichers;
 global using Serilog.Extensions;
-global using Xunit;
+global using FluentAssertions;
+global using NUnit.Framework;

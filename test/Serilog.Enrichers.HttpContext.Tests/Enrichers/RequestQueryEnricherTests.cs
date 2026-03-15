@@ -3,16 +3,17 @@
 public class RequestQueryEnricherTests
 {
     private const string LogPropertyName = "RequestQuery";
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public RequestQueryEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
         _contextAccessor = Substitute.For<IHttpContextAccessor>();
         _contextAccessor.HttpContext.Returns(httpContext);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithQuery_WhenHttpRequestContainQuery_ShouldCreateBodyProperty()
     {
         // Arrange
@@ -30,12 +31,12 @@ public class RequestQueryEnricherTests
         log.Information(@"Has a request query.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
-        Assert.Equal(query, evt.Properties[LogPropertyName].LiteralValue().ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
+        evt.Properties[LogPropertyName].LiteralValue().ToString().Should().Be(query);
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
         var contextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -50,11 +51,11 @@ public class RequestQueryEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.False(evt.Properties.ContainsKey(LogPropertyName));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey(LogPropertyName);
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenLogMoreThanOnce_ShouldReadFromHttpContextItems()
     {
         var query = "?a=1&b=2";
@@ -70,19 +71,19 @@ public class RequestQueryEnricherTests
         log.Information("first");
         log.Information("second");
 
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
-        Assert.Equal(query, evt.Properties[LogPropertyName].LiteralValue().ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
+        evt.Properties[LogPropertyName].LiteralValue().ToString().Should().Be(query);
     }
 
-    [Fact]
+    [Test]
     public void WithRequestQuery_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithRequestQuery()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 }

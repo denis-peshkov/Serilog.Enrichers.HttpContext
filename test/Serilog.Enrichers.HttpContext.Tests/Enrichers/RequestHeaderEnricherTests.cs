@@ -2,23 +2,24 @@
 
 public class RequestHeaderEnricherTests
 {
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public RequestHeaderEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
         _contextAccessor = Substitute.For<IHttpContextAccessor>();
         _contextAccessor.HttpContext.Returns(httpContext);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithClientHeader_WhenHttpRequestContainHeader_ShouldCreateNamedHeaderValueProperty()
     {
         // Arrange
         var headerKey = "RequestId";
         var propertyName = "HttpRequestId";
         var headerValue = Guid.NewGuid().ToString();
-        _contextAccessor.HttpContext.Request.Headers.Add(headerKey, headerValue);
+        _contextAccessor.HttpContext.Request.Headers[headerKey] = headerValue;
 
         var clientHeaderEnricher = new RequestHeaderEnricher(headerKey, propertyName, _contextAccessor);
 
@@ -33,18 +34,18 @@ public class RequestHeaderEnricherTests
         log.Information(@"Second testing log enricher.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(propertyName));
-        Assert.Equal(headerValue, evt.Properties[propertyName].LiteralValue().ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(propertyName);
+        evt.Properties[propertyName].LiteralValue().ToString().Should().Be(headerValue);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithClientHeader_WhenHttpRequestContainHeader_ShouldCreateHeaderValueProperty()
     {
         // Arrange
         var headerKey = "RequestId";
         var headerValue = Guid.NewGuid().ToString();
-        _contextAccessor.HttpContext.Request.Headers.Add(headerKey, headerValue);
+        _contextAccessor.HttpContext.Request.Headers[headerKey] = headerValue;
 
         var clientHeaderEnricher = new RequestHeaderEnricher(headerKey, propertyName:string.Empty, _contextAccessor);
 
@@ -59,12 +60,12 @@ public class RequestHeaderEnricherTests
         log.Information(@"Second testing log enricher.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(headerKey));
-        Assert.Equal(headerValue, evt.Properties[headerKey].LiteralValue().ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(headerKey);
+        evt.Properties[headerKey].LiteralValue().ToString().Should().Be(headerValue);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithMulitpleClientHeaderEnricher_WhenHttpRequestContainHeaders_ShouldCreateHeaderValuesProperty()
     {
         // Arrange
@@ -72,8 +73,8 @@ public class RequestHeaderEnricherTests
         var headerKey2 = "User-Agent";
         var headerValue1 = Guid.NewGuid().ToString();
         var headerValue2 = Guid.NewGuid().ToString();
-        _contextAccessor.HttpContext.Request.Headers.Add(headerKey1, headerValue1);
-        _contextAccessor.HttpContext.Request.Headers.Add(headerKey2, headerValue2);
+        _contextAccessor.HttpContext.Request.Headers[headerKey1] = headerValue1;
+        _contextAccessor.HttpContext.Request.Headers[headerKey2] = headerValue2;
 
         var clientHeaderEnricher1 = new RequestHeaderEnricher(headerKey1, propertyName:string.Empty, _contextAccessor);
         var clientHeaderEnricher2 = new RequestHeaderEnricher(headerKey2, propertyName:string.Empty, _contextAccessor);
@@ -90,14 +91,14 @@ public class RequestHeaderEnricherTests
         log.Information(@"Second testing log enricher.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(headerKey1));
-        Assert.Equal(headerValue1, evt.Properties[headerKey1].LiteralValue().ToString());
-        Assert.True(evt.Properties.ContainsKey(headerKey2.Replace("-", "")));
-        Assert.Equal(headerValue2, evt.Properties[headerKey2.Replace("-", "")].LiteralValue().ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(headerKey1);
+        evt.Properties[headerKey1].LiteralValue().ToString().Should().Be(headerValue1);
+        evt.Properties.Should().ContainKey(headerKey2.Replace("-", ""));
+        evt.Properties[headerKey2.Replace("-", "")].LiteralValue().ToString().Should().Be(headerValue2);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithClientHeader_WhenHttpRequestNotContainHeader_ShouldCreateHeaderValuePropertyWithNoValue()
     {
         // Arrange
@@ -115,12 +116,12 @@ public class RequestHeaderEnricherTests
         log.Information(@"Second testing log enricher.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(headerKey));
-        Assert.Null(evt.Properties[headerKey].LiteralValue());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(headerKey);
+        evt.Properties[headerKey].LiteralValue().Should().BeNull();
     }
 
-    [Fact]
+    [Test]
     public void WithRequestHeader_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         // Arrange
@@ -130,13 +131,12 @@ public class RequestHeaderEnricherTests
             .CreateLogger();
 
         // Act
-        var exception = Record.Exception(() => logger.Information("LOG"));
-
         // Assert
-        Assert.Null(exception);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
         var contextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -151,11 +151,11 @@ public class RequestHeaderEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.False(evt.Properties.ContainsKey("PropertyName"));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey("PropertyName");
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenPropertyNameIsNull_UsesHeaderNameWithoutHyphens()
     {
         var headerKey = "User-Agent";
@@ -172,9 +172,9 @@ public class RequestHeaderEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey("UserAgent"));
-        Assert.Equal(headerValue, evt.Properties["UserAgent"].LiteralValue()?.ToString());
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey("UserAgent");
+        evt.Properties["UserAgent"].LiteralValue()?.ToString().Should().Be(headerValue);
     }
 
 }

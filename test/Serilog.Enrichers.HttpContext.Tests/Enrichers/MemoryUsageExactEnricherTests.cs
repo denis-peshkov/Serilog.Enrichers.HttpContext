@@ -2,7 +2,7 @@
 
 public class MemoryUsageExactEnricherTests
 {
-    [Fact]
+    [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
         var contextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -17,11 +17,11 @@ public class MemoryUsageExactEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.False(evt.Properties.ContainsKey(MemoryUsageExactEnricher.PROPERTY_NAME));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey(MemoryUsageExactEnricher.PROPERTY_NAME);
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenItemsContainsStartMemory_AddsMemoryUsageExactProperty()
     {
         var context = new DefaultHttpContext();
@@ -40,15 +40,15 @@ public class MemoryUsageExactEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(MemoryUsageExactEnricher.PROPERTY_NAME));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(MemoryUsageExactEnricher.PROPERTY_NAME);
         var value = evt.Properties[MemoryUsageExactEnricher.PROPERTY_NAME].LiteralValue();
-        Assert.NotNull(value);
+        value.Should().NotBeNull();
         var memory = Convert.ToInt64(value);
-        Assert.True(memory >= 0);
+        memory.Should().BeGreaterThanOrEqualTo(0);
     }
 
-    [Fact]
+    [Test]
     public void Enrich_WhenItemsDoesNotContainStartMemory_DoesNotAddProperty()
     {
         var context = new DefaultHttpContext();
@@ -64,18 +64,18 @@ public class MemoryUsageExactEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.False(evt.Properties.ContainsKey(MemoryUsageExactEnricher.PROPERTY_NAME));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey(MemoryUsageExactEnricher.PROPERTY_NAME);
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsageExact_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithMemoryUsageExact()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 }

@@ -3,16 +3,17 @@
 public class MemoryUsageEnricherTests
 {
     private const string LogPropertyName = "MemoryUsage";
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public MemoryUsageEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
         _contextAccessor = Substitute.For<IHttpContextAccessor>();
         _contextAccessor.HttpContext.Returns(httpContext);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithMemory_WhenHttpRequestExists_ShouldCreateMemoryProperty()
     {
         // Arrange
@@ -28,19 +29,19 @@ public class MemoryUsageEnricherTests
         log.Information(@"Has a memory query.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
-        Assert.True(int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()!) > 10_999_999);
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
+        int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()!).Should().BeGreaterThan(10_999_999);
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsage_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithMemoryUsage()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 }

@@ -2,11 +2,11 @@
 
 public class ApplicationBuilderExtensionsTests
 {
-    [Fact]
+    [Test]
     public void UseSerilogMemoryUsageExact_WhenAppIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ApplicationBuilderExtensions.UseSerilogMemoryUsageExact(null!));
-        Assert.Equal("app", ex.ParamName);
+        var act = () => ApplicationBuilderExtensions.UseSerilogMemoryUsageExact(null!);
+        var ex = act.Should().Throw<ArgumentNullException>();
+        ex.And.ParamName.Should().Be("app");
     }
 }

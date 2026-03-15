@@ -3,16 +3,17 @@
 public class RequestBodyEnricherTests
 {
     private const string LogPropertyName = "RequestBody";
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public RequestBodyEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
         _contextAccessor = Substitute.For<IHttpContextAccessor>();
         _contextAccessor.HttpContext.Returns(httpContext);
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithBody_WhenHttpRequestContainBody_ShouldCreateBodyProperty()
     {
         // Arrange
@@ -33,15 +34,15 @@ public class RequestBodyEnricherTests
         log.Information(@"Has a request body.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
         // Assert.Equal(body, evt.Properties[LogPropertyName].LiteralValue().ToString()); // todo: fix some strange bug
     }
 
 
 
 
-    [Fact]
+    [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
         var contextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -56,19 +57,19 @@ public class RequestBodyEnricherTests
 
         log.Information("test");
 
-        Assert.NotNull(evt);
-        Assert.False(evt.Properties.ContainsKey(LogPropertyName));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey(LogPropertyName);
     }
 
-    [Fact]
+    [Test]
     public void WithRequestBody_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithRequestBody()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 
     private static void UpdateMemoryStream(MemoryStream memoryStream, string responseBody)

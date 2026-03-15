@@ -2,104 +2,97 @@
 
 public class HttpContextLoggerConfigurationExtensionsTests
 {
-    [Fact]
+    [Test]
     public void WithClientIp_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithClientIp());
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithClientIp();
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsage_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithMemoryUsage());
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithMemoryUsage();
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsageExact_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithMemoryUsageExact());
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithMemoryUsageExact();
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithRequestBody_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestBody());
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestBody();
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithRequestQuery_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestQuery());
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestQuery();
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithRequestHeader_WhenEnrichmentConfigurationIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestHeader("X-Header"));
-        Assert.Equal("enrichmentConfiguration", ex.ParamName);
+        var act = () => ((Serilog.Configuration.LoggerEnrichmentConfiguration)null!).WithRequestHeader("X-Header");
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("enrichmentConfiguration");
     }
 
-    [Fact]
+    [Test]
     public void WithRequestHeader_WhenHeaderNameIsNull_ThrowsArgumentNullException()
     {
         var config = new LoggerConfiguration();
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            config.Enrich.WithRequestHeader(null!));
-        Assert.Equal("headerName", ex.ParamName);
+        var act = () => config.Enrich.WithRequestHeader(null!);
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("headerName");
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsage_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithMemoryUsage()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 
-    [Fact]
+    [Test]
     public void WithMemoryUsageExact_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithMemoryUsageExact()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 
-    [Fact]
+    [Test]
     public void WithRequestBody_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithRequestBody()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 
-    [Fact]
+    [Test]
     public void WithRequestQuery_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()
             .Enrich.WithRequestQuery()
             .WriteTo.Sink(new DelegatingSink(_ => { }))
             .CreateLogger();
-        var ex = Record.Exception(() => logger.Information("LOG"));
-        Assert.Null(ex);
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 }

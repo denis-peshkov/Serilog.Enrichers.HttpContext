@@ -4,23 +4,22 @@ using Serilog.Middlewares;
 
 public class RequestMemoryLoggingMiddlewareTests
 {
-    [Fact]
+    [Test]
     public void Constructor_WhenNextIsNull_ThrowsArgumentNullException()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
-            new RequestMemoryLoggingMiddleware(null!));
-        Assert.Equal("next", ex.ParamName);
+        var act = () => new RequestMemoryLoggingMiddleware(null!);
+        act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("next");
     }
 
-    [Fact]
-    public async Task Invoke_WhenHttpContextIsNull_ThrowsArgumentNullException()
+    [Test]
+    public void Invoke_WhenHttpContextIsNull_ThrowsArgumentNullException()
     {
         var middleware = new RequestMemoryLoggingMiddleware(_ => Task.CompletedTask);
-        await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            middleware.Invoke(null!));
+        var act = () => middleware.Invoke(null!);
+        act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Invoke_StoresStartMemoryInHttpContextItems()
     {
         Microsoft.AspNetCore.Http.HttpContext capturedContext = null!;
@@ -31,10 +30,10 @@ public class RequestMemoryLoggingMiddlewareTests
         });
         var context = new DefaultHttpContext();
         await middleware.Invoke(context);
-        Assert.NotNull(capturedContext);
-        Assert.True(context.Items.ContainsKey(MemoryUsageExactEnricher.ITEM_KEY));
+        capturedContext.Should().NotBeNull();
+        context.Items.Should().ContainKey(MemoryUsageExactEnricher.ITEM_KEY);
         var prop = context.Items[MemoryUsageExactEnricher.ITEM_KEY] as LogEventProperty;
-        Assert.NotNull(prop);
-        Assert.Equal(MemoryUsageExactEnricher.PROPERTY_NAME, prop.Name);
+        prop.Should().NotBeNull();
+        prop!.Name.Should().Be(MemoryUsageExactEnricher.PROPERTY_NAME);
     }
 }
