@@ -26,6 +26,7 @@ v8.2.0 - 16 Mar 2026
 - Add .NET 9 and .NET 10 support.
 - Update Microsoft.AspNetCore.Http to 2.3.9, Serilog to 4.3.1 (3.1.1 for net7.0).
 - Fix nuspec duplicate key (targetFramework casing).
-- Fix README: IWebHostEnvironment, supported frameworks.
+- Fix README: IWebHostEnvironment, supported frameworks, WithClientIp headerName.
 - Add .editorconfig, UTF-8 BOM.
+- Migrate tests to NUnit, FluentAssertions.
 - Extended test coverage.

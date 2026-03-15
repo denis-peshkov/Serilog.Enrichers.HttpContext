@@ -85,9 +85,7 @@ or with parameters:
 ```json
 {
   "Name": "WithClientIp",
-  "Args": {
-    "xForwardHeaderName": "CF-Connecting-IP"
-  }
+  "Args": { "headerName": "CF-Connecting-IP" }
 }
 ```
 
@@ -100,7 +98,7 @@ Full example for custom proxy header:
     "Enrich": [
       {
         "Name": "WithClientIp",
-        "Args": { "xForwardHeaderName": "CF-Connecting-IP" }
+        "Args": { "headerName": "CF-Connecting-IP" }
       }
     ],
     "WriteTo": [ { "Name": "Console" } ]
