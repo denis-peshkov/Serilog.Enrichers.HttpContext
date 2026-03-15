@@ -1,4 +1,4 @@
-namespace Serilog.Enrichers;
+﻿namespace Serilog.Enrichers;
 
 public class ClientIpEnricher : ILogEventEnricher
 {

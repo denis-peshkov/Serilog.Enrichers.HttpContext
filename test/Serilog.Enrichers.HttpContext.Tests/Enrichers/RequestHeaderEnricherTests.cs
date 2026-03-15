@@ -135,4 +135,46 @@ public class RequestHeaderEnricherTests
         // Assert
         Assert.Null(exception);
     }
+
+    [Fact]
+    public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
+    {
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext.Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var enricher = new RequestHeaderEnricher("X-Header", "PropertyName", contextAccessor);
+
+        LogEvent? evt = null;
+        var log = new LoggerConfiguration()
+            .Enrich.With(enricher)
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        log.Information("test");
+
+        Assert.NotNull(evt);
+        Assert.False(evt.Properties.ContainsKey("PropertyName"));
+    }
+
+    [Fact]
+    public void Enrich_WhenPropertyNameIsNull_UsesHeaderNameWithoutHyphens()
+    {
+        var headerKey = "User-Agent";
+        var headerValue = "TestAgent";
+        _contextAccessor.HttpContext.Request.Headers[headerKey] = headerValue;
+
+        var enricher = new RequestHeaderEnricher(headerKey, null!, _contextAccessor);
+
+        LogEvent? evt = null;
+        var log = new LoggerConfiguration()
+            .Enrich.With(enricher)
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        log.Information("test");
+
+        Assert.NotNull(evt);
+        Assert.True(evt.Properties.ContainsKey("UserAgent"));
+        Assert.Equal(headerValue, evt.Properties["UserAgent"].LiteralValue()?.ToString());
+    }
+
 }

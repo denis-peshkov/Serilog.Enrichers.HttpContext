@@ -41,6 +41,36 @@ public class RequestBodyEnricherTests
 
 
 
+    [Fact]
+    public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
+    {
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext.Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var enricher = new RequestBodyEnricher(contextAccessor);
+
+        LogEvent? evt = null;
+        var log = new LoggerConfiguration()
+            .Enrich.With(enricher)
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        log.Information("test");
+
+        Assert.NotNull(evt);
+        Assert.False(evt.Properties.ContainsKey(LogPropertyName));
+    }
+
+    [Fact]
+    public void WithRequestBody_ThenLoggerIsCalled_ShouldNotThrowException()
+    {
+        var logger = new LoggerConfiguration()
+            .Enrich.WithRequestBody()
+            .WriteTo.Sink(new DelegatingSink(_ => { }))
+            .CreateLogger();
+        var ex = Record.Exception(() => logger.Information("LOG"));
+        Assert.Null(ex);
+    }
+
     private static void UpdateMemoryStream(MemoryStream memoryStream, string responseBody)
     {
         memoryStream.SetLength(0);

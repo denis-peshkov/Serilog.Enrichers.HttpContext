@@ -30,6 +30,17 @@ public class MemoryUsageEnricherTests
         // Assert
         Assert.NotNull(evt);
         Assert.True(evt.Properties.ContainsKey(LogPropertyName));
-        Assert.True(int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()) > 10_999_999);
+        Assert.True(int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()!) > 10_999_999);
+    }
+
+    [Fact]
+    public void WithMemoryUsage_ThenLoggerIsCalled_ShouldNotThrowException()
+    {
+        var logger = new LoggerConfiguration()
+            .Enrich.WithMemoryUsage()
+            .WriteTo.Sink(new DelegatingSink(_ => { }))
+            .CreateLogger();
+        var ex = Record.Exception(() => logger.Information("LOG"));
+        Assert.Null(ex);
     }
 }
