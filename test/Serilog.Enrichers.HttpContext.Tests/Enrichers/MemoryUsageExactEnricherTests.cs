@@ -1,12 +1,13 @@
-﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class MemoryUsageExactEnricherTests
 {
     [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext.Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var contextAccessor = mock.Object;
         var enricher = new MemoryUsageExactEnricher(contextAccessor);
 
         LogEvent? evt = null;
@@ -28,8 +29,9 @@ public class MemoryUsageExactEnricherTests
         var startMemory = Process.GetCurrentProcess().WorkingSet64 - 1000;
         context.Items[MemoryUsageExactEnricher.ITEM_KEY] =
             new LogEventProperty(MemoryUsageExactEnricher.PROPERTY_NAME, new ScalarValue(startMemory));
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext.Returns(context);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(context);
+        var contextAccessor = mock.Object;
         var enricher = new MemoryUsageExactEnricher(contextAccessor);
 
         LogEvent? evt = null;
@@ -52,8 +54,9 @@ public class MemoryUsageExactEnricherTests
     public void Enrich_WhenItemsDoesNotContainStartMemory_DoesNotAddProperty()
     {
         var context = new DefaultHttpContext();
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext.Returns(context);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(context);
+        var contextAccessor = mock.Object;
         var enricher = new MemoryUsageExactEnricher(contextAccessor);
 
         LogEvent? evt = null;

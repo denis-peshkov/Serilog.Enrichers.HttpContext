@@ -1,4 +1,4 @@
-﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class MemoryUsageEnricherTests
 {
@@ -9,8 +9,9 @@ public class MemoryUsageEnricherTests
     public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
-        _contextAccessor = Substitute.For<IHttpContextAccessor>();
-        _contextAccessor.HttpContext.Returns(httpContext);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(httpContext);
+        _contextAccessor = mock.Object;
     }
 
     [Test]

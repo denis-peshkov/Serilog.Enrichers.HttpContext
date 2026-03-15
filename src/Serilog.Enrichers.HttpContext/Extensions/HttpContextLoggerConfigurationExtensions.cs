@@ -89,7 +89,7 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithRequestHeader(
         this LoggerEnrichmentConfiguration enrichmentConfiguration,
         string headerName,
-        string propertyName = null)
+        string? propertyName = null)
     {
         if (enrichmentConfiguration == null)
         {

@@ -5,6 +5,7 @@ public class MemoryUsageEnricher : ILogEventEnricher
 {
     private const string PROPERTY_NAME = "MemoryUsage";
 
+    /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var currentMemoryInBytes = Process.GetCurrentProcess().WorkingSet64;

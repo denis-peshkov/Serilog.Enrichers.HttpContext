@@ -1,5 +1,6 @@
 ﻿namespace Serilog.Enrichers;
 
+/// <inheritdoc/>
 public class ClientIpEnricher : ILogEventEnricher
 {
     private const string PROPERTY_NAME = "ClientIp";
@@ -18,6 +19,7 @@ public class ClientIpEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
+    /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var httpContext = _contextAccessor.HttpContext;

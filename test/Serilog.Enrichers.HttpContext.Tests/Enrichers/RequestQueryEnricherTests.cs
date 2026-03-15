@@ -1,4 +1,4 @@
-﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class RequestQueryEnricherTests
 {
@@ -9,8 +9,9 @@ public class RequestQueryEnricherTests
     public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
-        _contextAccessor = Substitute.For<IHttpContextAccessor>();
-        _contextAccessor.HttpContext.Returns(httpContext);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(httpContext);
+        _contextAccessor = mock.Object;
     }
 
     [Test]
@@ -39,8 +40,9 @@ public class RequestQueryEnricherTests
     [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
     {
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext.Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var contextAccessor = mock.Object;
         var enricher = new RequestQueryEnricher(contextAccessor);
 
         LogEvent? evt = null;
