@@ -1,0 +1,26 @@
+Release Notes - Serilog.Enrichers.HttpContext
+https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext/releases
+
+8.0.4 - 16 May 2025
+- Initial v8 release
+
+8.0.5 - 16 May 2025
+- Hotfix: fix pipeline (#1)
+
+8.0.6 - 16 May 2025
+- Add autobuild/push NuGet packages (#2)
+
+8.0.7 - 17 Jul 2025
+- (no release notes)
+
+8.0.8 - 17 Jul 2025
+- Hotfix: small fix of documentation (#5)
+
+8.0.9 - 15 Apr 2025
+- Add MemoryUsage enricher (#6)
+
+8.1.0 - 05 Mar 2026
+- Fix: an item with the same key has already been added (#10)
+
+v8.1.0 - 15 Mar 2026
+-

@@ -14,6 +14,7 @@
     <File Path="GitVersion.yml" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+    <File Path="ReleaseNotes.txt" />
   </Folder>
   <Folder Name="/sample/">
     <Project Path="sample/SampleWebApp/SampleWebApp.csproj" />

@@ -13,7 +13,9 @@
 		<readme>docs\README.md</readme>
 		<icon>icon.png</icon>
 		<releaseNotes>
-			Add MemoryUsage enricher.
+			Enrichers: WithClientIp, WithMemoryUsage, WithMemoryUsageExact, WithRequestBody, WithRequestQuery, WithRequestHeader.
+			Supported frameworks: .NET Standard 2.1, .NET 6, .NET 7, .NET 8, .NET 9, .NET 10.
+			UseSerilogMemoryUsageExact() middleware required for WithMemoryUsageExact.
 		</releaseNotes>
 		<description>Enriches Serilog events with client IP, RequestBody, RequestQuery, HTTP request headers and memory usage. Correlation Id can be added via WithRequestHeader.</description>
 		<tags>serilog enrichers enricher ip correlationid request header body query memory memoryusage</tags>
