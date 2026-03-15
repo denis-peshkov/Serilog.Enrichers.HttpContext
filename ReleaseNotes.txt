@@ -28,9 +28,11 @@ v8.2.0 - 16 Mar 2026
 - Fix: compatibility with .NET Standard 2.1 and .NET 6 (conditional compilation for ArgumentNullException.ThrowIfNull, ArgumentException.ThrowIfNullOrEmpty).
 - Remove dead NETFULL code from ClientIpEnricher.
 - Fix nuspec duplicate key (targetFramework casing).
+- SampleWebApp: fix ASP0016 (RequestDelegate return value), use async/await.
 - Fix README: IWebHostEnvironment, supported frameworks, WithClientIp headerName.
 - Improve README: clarify that WithClientIp uses "x-forwarded-for" header by default.
 - Add .editorconfig, UTF-8 BOM.
 - Extended test coverage.
 - Migrate tests to NUnit, FluentAssertions.
 - Tests: replace NSubstitute with Moq.
+- Tests: suppress NU1701, nullable warnings (CS8600, CS8602, CS8603, CS8625).
