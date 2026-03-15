@@ -2,7 +2,7 @@
 
 Enriches Serilog events with client IP, RequestBody, RequestQuery, HTTP request headers and memory usage. Correlation Id can be added via `WithRequestHeader("X-Correlation-Id", "CorrelationId")`.
 
-**Supported frameworks:** .NET Standard 2.1, .NET 6, .NET 7, .NET 8
+**Supported frameworks:** .NET Standard 2.1, .NET 6, .NET 7, .NET 8, .NET 9, .NET 10
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 

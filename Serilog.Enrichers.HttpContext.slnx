@@ -3,6 +3,7 @@
     <File Path=".github\workflows\dotnet.yml" />
   </Folder>
   <Folder Name="/assets/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="config.nuspec" />
     <File Path="GitVersion.yml" />
