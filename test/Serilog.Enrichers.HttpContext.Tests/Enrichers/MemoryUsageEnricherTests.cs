@@ -1,18 +1,20 @@
-﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class MemoryUsageEnricherTests
 {
     private const string LogPropertyName = "MemoryUsage";
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public MemoryUsageEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
-        _contextAccessor = Substitute.For<IHttpContextAccessor>();
-        _contextAccessor.HttpContext.Returns(httpContext);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(httpContext);
+        _contextAccessor = mock.Object;
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithMemory_WhenHttpRequestExists_ShouldCreateMemoryProperty()
     {
         // Arrange
@@ -28,8 +30,19 @@ public class MemoryUsageEnricherTests
         log.Information(@"Has a memory query.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
-        Assert.True(int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()) > 10_999_999);
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
+        int.Parse(evt.Properties[LogPropertyName].LiteralValue().ToString()!).Should().BeGreaterThan(10_999_999);
+    }
+
+    [Test]
+    public void WithMemoryUsage_ThenLoggerIsCalled_ShouldNotThrowException()
+    {
+        var logger = new LoggerConfiguration()
+            .Enrich.WithMemoryUsage()
+            .WriteTo.Sink(new DelegatingSink(_ => { }))
+            .CreateLogger();
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
     }
 }

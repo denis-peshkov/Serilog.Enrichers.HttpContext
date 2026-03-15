@@ -1,16 +1,28 @@
 <Solution>
+  <Folder Name="/.cursor/" />
+  <Folder Name="/.cursor/rules/">
+    <File Path=".cursor/rules/utf8-bom.mdc" />
+  </Folder>
+  <Folder Name="/.github/" />
   <Folder Name="/.github/workflows/">
-    <File Path=".github\workflows\dotnet.yml" />
+    <File Path=".github/workflows/dotnet.yml" />
   </Folder>
   <Folder Name="/assets/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="config.nuspec" />
     <File Path="GitVersion.yml" />
+    <File Path="icon.png" />
+    <File Path="icon.svg" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+    <File Path="ReleaseNotes.txt" />
   </Folder>
   <Folder Name="/sample/">
     <Project Path="sample/SampleWebApp/SampleWebApp.csproj" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="scripts/ensure-bom.py" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Serilog.Enrichers.HttpContext/Serilog.Enrichers.HttpContext.csproj" />

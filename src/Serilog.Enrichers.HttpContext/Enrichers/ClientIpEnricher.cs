@@ -1,11 +1,11 @@
-namespace Serilog.Enrichers;
+﻿namespace Serilog.Enrichers;
 
+/// <inheritdoc/>
 public class ClientIpEnricher : ILogEventEnricher
 {
-    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private const string PROPERTY_NAME = "ClientIp";
+    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private readonly string _forwardHeaderKey;
-
     private readonly IHttpContextAccessor _contextAccessor;
 
     public ClientIpEnricher(string forwardHeaderKey)
@@ -19,6 +19,7 @@ public class ClientIpEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
+    /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var httpContext = _contextAccessor.HttpContext;
@@ -42,17 +43,7 @@ public class ClientIpEnricher : ILogEventEnricher
         logEvent.AddPropertyIfAbsent(ipAddressProperty);
     }
 
-#if NETFULL
-        private string GetIpAddress()
-        {
-            var ipAddress = _contextAccessor.HttpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-            return !string.IsNullOrEmpty(ipAddress)
-                ? GetIpAddressFromProxy(ipAddress)
-                : _contextAccessor.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
-        }
-#else
-    private string GetIpAddress()
+    private string? GetIpAddress()
     {
         var ipAddress = _contextAccessor.HttpContext?.Request?.Headers[_forwardHeaderKey].FirstOrDefault();
 
@@ -60,7 +51,6 @@ public class ClientIpEnricher : ILogEventEnricher
             ? GetIpAddressFromProxy(ipAddress)
             : _contextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
     }
-#endif
 
     private string GetIpAddressFromProxy(string proxyFieldIpList)
     {

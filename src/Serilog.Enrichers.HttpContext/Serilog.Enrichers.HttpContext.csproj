@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>11</LangVersion>
     <RootNamespace>Serilog</RootNamespace>
     <Nullable>enable</Nullable>
@@ -20,23 +20,30 @@
   </Target>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>NETCORE;NETSTANDARD2_1</DefineConstants>
+    <DefineConstants>NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Serilog.Enrichers.HttpContext.Tests" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.22" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
+  <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.1'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
   </ItemGroup>
 
 </Project>

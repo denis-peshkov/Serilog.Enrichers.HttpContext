@@ -41,16 +41,17 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapPost("/weatherforecast", (context) =>
+app.MapPost("/weatherforecast", (async (HttpContext context) =>
     {
-        var t = Encoding.UTF8.GetString(context.Request.BodyReader.ReadAtLeastAsync(0).Result.Buffer);
+        var result = await context.Request.BodyReader.ReadAtLeastAsync(0);
+        var t = Encoding.UTF8.GetString(result.Buffer);
 
         var somethingThatConsumesMemory = Enumerable.Range(0, 10000000).ToArray();
         var logger = app.Services.GetService<ILogger>();
-        logger.Information("www");
+        logger?.Information("www");
 
-        return Task.FromResult(t);
-    })
+        return t;
+    }))
     .WithName("PostWeatherForecast");
 
 app.Run();
