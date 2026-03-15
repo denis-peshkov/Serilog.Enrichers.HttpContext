@@ -12,6 +12,8 @@
     <File Path=".gitignore" />
     <File Path="config.nuspec" />
     <File Path="GitVersion.yml" />
+    <File Path="icon.png" />
+    <File Path="icon.svg" />
     <File Path="LICENSE" />
     <File Path="README.md" />
     <File Path="ReleaseNotes.txt" />
