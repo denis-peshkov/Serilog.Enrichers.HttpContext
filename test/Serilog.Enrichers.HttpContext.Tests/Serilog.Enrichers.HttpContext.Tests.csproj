@@ -8,7 +8,7 @@
     <EnablePreviewFeatures>false</EnablePreviewFeatures>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
-    <NoWarn>1701;1702;1591;CS8618;</NoWarn>
+    <NoWarn>1701;1702;1591;CS8618;NU1701;</NoWarn>
     <IsPackable>false</IsPackable>
     <PackageProjectUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</PackageProjectUrl>
     <RepositoryUrl>https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext</RepositoryUrl>
