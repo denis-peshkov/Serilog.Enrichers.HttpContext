@@ -156,7 +156,7 @@ app.Run();
 
 `Startup.cs` (in `Configure` method):
 ```csharp
-public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 {
     loggerFactory.AddSerilog();
     app.UseSerilogMemoryUsageExact();
@@ -317,7 +317,7 @@ namespace MyWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             // ...
             loggerFactory.AddSerilog();
