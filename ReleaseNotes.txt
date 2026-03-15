@@ -27,6 +27,8 @@ v8.2.0 - 16 Mar 2026
 - Update Microsoft.AspNetCore.Http to 2.3.9, Serilog to 4.3.1 (3.1.1 for net7.0).
 - Fix nuspec duplicate key (targetFramework casing).
 - Fix README: IWebHostEnvironment, supported frameworks, WithClientIp headerName.
+- Improve README: clarify that WithClientIp uses "x-forwarded-for" header by default.
 - Add .editorconfig, UTF-8 BOM.
-- Migrate tests to NUnit, FluentAssertions.
 - Extended test coverage.
+- Migrate tests to NUnit, FluentAssertions.
+- Tests: replace NSubstitute with Moq.
