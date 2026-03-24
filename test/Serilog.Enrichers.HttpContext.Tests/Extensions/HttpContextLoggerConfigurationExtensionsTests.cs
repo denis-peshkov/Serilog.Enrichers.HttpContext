@@ -53,6 +53,14 @@ public class HttpContextLoggerConfigurationExtensionsTests
     }
 
     [Test]
+    public void WithRequestHeader_WhenHeaderNameIsEmpty_ThrowsArgumentException()
+    {
+        var config = new LoggerConfiguration();
+        var act = () => config.Enrich.WithRequestHeader(string.Empty);
+        act.Should().Throw<ArgumentException>().And.ParamName.Should().Be("headerName");
+    }
+
+    [Test]
     public void WithMemoryUsage_ThenLoggerIsCalled_ShouldNotThrowException()
     {
         var logger = new LoggerConfiguration()

@@ -123,8 +123,8 @@ jobs:
           #            -Dsonar.organization=peshkov
           #            -Dsonar.projectKey=Serilog.Enrichers.HttpContext
           #            -Dsonar.python.coverage.reportPaths=coverage.xml
-          #            -Dsonar.sources=Serilog.Enrichers.HttpContext/
-          #            -Dsonar.tests=tests/
+          #            -Dsonar.sources=src/Serilog.Enrichers.HttpContext/
+          #            -Dsonar.tests=test/Serilog.Enrichers.HttpContext.Tests/
           #            -Dsonar.exclusions=tests/**
           #            -Dsonar.inclusions=tests/**
           #            -Dsonar.test.exclusions=tests/**
@@ -136,6 +136,7 @@ jobs:
             -Dsonar.projectKey=Serilog.Enrichers.HttpContext
             -Dsonar.cs.opencover.reportsPaths=TestResults/**/coverage.opencover.xml
             -Dsonar.sources=src/Serilog.Enrichers.HttpContext/
+            -Dsonar.tests=test/Serilog.Enrichers.HttpContext.Tests/
             -Dsonar.verbose=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

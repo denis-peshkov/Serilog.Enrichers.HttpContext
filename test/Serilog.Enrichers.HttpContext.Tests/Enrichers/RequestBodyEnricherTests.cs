@@ -1,4 +1,4 @@
-namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class RequestBodyEnricherTests
 {
@@ -40,8 +40,30 @@ public class RequestBodyEnricherTests
         // Assert.Equal(body, evt.Properties[LogPropertyName].LiteralValue().ToString()); // todo: fix some strange bug
     }
 
+    [Test]
+    public void EnrichLogWithBody_WhenLogTwice_UsesCachedPropertyFromHttpContextItems()
+    {
+        var body = "{\"x\":1}";
+        using var memoryStream = new MemoryStream();
+        UpdateMemoryStream(memoryStream, body);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        _contextAccessor.HttpContext.Request.Body = memoryStream;
+        var bodyEnricher = new RequestBodyEnricher(_contextAccessor);
 
+        LogEvent? first = null;
+        LogEvent? second = null;
+        var log = new LoggerConfiguration()
+            .Enrich.With(bodyEnricher)
+            .WriteTo.Sink(new DelegatingSink(e => { if (first is null) first = e; else second = e; }))
+            .CreateLogger();
 
+        log.Information("first");
+        log.Information("second");
+
+        first.Should().NotBeNull();
+        second.Should().NotBeNull();
+        second!.Properties.Should().ContainKey(LogPropertyName);
+    }
 
     [Test]
     public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()

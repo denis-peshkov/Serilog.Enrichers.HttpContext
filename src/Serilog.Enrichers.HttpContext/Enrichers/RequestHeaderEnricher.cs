@@ -23,11 +23,6 @@ public class RequestHeaderEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
-    internal RequestHeaderEnricher(IHttpContextAccessor contextAccessor)
-    {
-        _contextAccessor = contextAccessor;
-    }
-
     /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
