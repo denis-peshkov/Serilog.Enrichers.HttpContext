@@ -71,11 +71,49 @@ jobs:
 #      - name: Restore dependencies with NuGet
 #        run: nuget restore $SOLUTION
 
+#      - name: Build
+#        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
+
       - name: Build
-        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
+        run: |
+          dotnet build "$SOLUTION" --configuration "$BUILD_CONFIG" --no-restore \
+          -p:Configuration=$BUILD_CONFIG \
+          -p:Version=${GitVersion_SemVer} \
+          -p:AssemblyVersion=${GitVersion_AssemblySemVer} \
+          -p:FileVersion=${GitVersion_AssemblySemFileVer} \
+          -p:InformationalVersion="${GitVersion_InformationalVersion}" \
+          -p:Company="Denis Peshkov" \
+          -p:Product="Serilog.Enrichers.HttpContext" \
+          -p:Description="Enriches Serilog events with client IP and Correlation Id and RequestBody and RequestQuery and HTTP request headers and information of the memory usage." \
+          -p:RepositoryUrl="https://github.com/denis-peshkov/Serilog.Enrichers.HttpContext.git" \
+          -p:RepositoryType=git \
+          -p:CLSCompliant=true \
+          -p:NeutralLanguage=en
+
+#      - name: Run tests
+#        run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
 
       - name: Run tests
-        run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
+        run: >
+          dotnet test /p:Configuration=$BUILD_CONFIG
+          --no-restore
+          --no-build
+          --verbosity normal
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
+          --
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      # Coverlet + OpenCover как в SonarCloud (.NET test coverage → Coverlet):
+      # https://docs.sonarsource.com/sonarqube-cloud/enriching/test-coverage/dotnet-test-coverage
+#      - name: Coverlet OpenCover report
+#        run: |
+#          dotnet tool install --global coverlet.console --version 6.0.2
+#          coverlet "Serilog.Enrichers.HttpContext.UnitTests/bin/${BUILD_CONFIG}/net10.0/Serilog.Enrichers.HttpContext.UnitTests.dll" \
+#            --target "dotnet" \
+#            --targetargs "test Serilog.Enrichers.HttpContext.UnitTests/Serilog.Enrichers.HttpContext.UnitTests.csproj --no-build --configuration ${BUILD_CONFIG} -f net10.0 --verbosity minimal" \
+#            -f=opencover \
+#            -o="coverage.opencover.xml"
 
       - name: SonarQube Scan
         uses: sonarsource/sonarcloud-github-action@v5 # Ex: v4.0.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
@@ -87,12 +125,16 @@ jobs:
           #            -Dsonar.python.coverage.reportPaths=coverage.xml
           #            -Dsonar.sources=Serilog.Enrichers.HttpContext/
           #            -Dsonar.tests=tests/
+          #            -Dsonar.exclusions=tests/**
+          #            -Dsonar.inclusions=tests/**
           #            -Dsonar.test.exclusions=tests/**
+          #            -Dsonar.test.inclusions=tests/**
+          #            -Dsonar.coverage.exclusions=tests/**
           #            -Dsonar.verbose=true
           args: >
             -Dsonar.organization=peshkov
             -Dsonar.projectKey=Serilog.Enrichers.HttpContext
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.cs.opencover.reportsPaths=TestResults/**/coverage.opencover.xml
             -Dsonar.sources=src/Serilog.Enrichers.HttpContext/
             -Dsonar.verbose=true
         env:
