@@ -3,8 +3,8 @@
 /// <inheritdoc/>
 public class MemoryUsageExactEnricher : ILogEventEnricher
 {
-    internal const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     internal const string PROPERTY_NAME = "MemoryUsageExact";
+    internal const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private readonly IHttpContextAccessor _contextAccessor;
 
     public MemoryUsageExactEnricher()
@@ -17,6 +17,7 @@ public class MemoryUsageExactEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
+    /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var httpContext = _contextAccessor.HttpContext;

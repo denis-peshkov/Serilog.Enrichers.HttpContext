@@ -2,7 +2,7 @@
 
 Enriches Serilog events with client IP, RequestBody, RequestQuery, HTTP request headers and memory usage. Correlation Id can be added via `WithRequestHeader("X-Correlation-Id", "CorrelationId")`.
 
-**Supported frameworks:** .NET Standard 2.1, .NET 6, .NET 7, .NET 8
+**Supported frameworks:** .NET Standard 2.1, .NET 6, .NET 7, .NET 8, .NET 9, .NET 10
 
 Install the _Serilog.Enrichers.HttpContext_ [NuGet package](https://www.nuget.org/packages/Serilog.Enrichers.HttpContext/)
 
@@ -32,7 +32,7 @@ or in `appsettings.json` file (requires [Serilog.Settings.Configuration](https:/
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       "WithClientIp",
@@ -65,7 +65,7 @@ or in `appsettings.json` file (requires [Serilog.Settings.Configuration](https:/
 
 ### WithClientIp
 
-Adds the `ClientIp` property — client IP address. When behind a proxy, uses the configured header to determine the real IP. Returns `"unknown"` when the IP cannot be determined.
+Adds the `ClientIp` property — client IP address. By default uses `"x-forwarded-for"` header. When behind a proxy, uses the configured header to determine the real IP. Returns `"unknown"` when the IP cannot be determined.
 
 | Parameter    | Type   | Default             | Description                                 |
 |--------------|--------|---------------------|---------------------------------------------|
@@ -93,8 +93,8 @@ Full example for custom proxy header:
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
-    "Using": [ "Serilog.Enrichers.HttpContext" ],
+    "MinimumLevel": "Verbose",
+    "Using":  [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       {
         "Name": "WithClientIp",
@@ -156,7 +156,7 @@ app.Run();
 
 `Startup.cs` (in `Configure` method):
 ```csharp
-public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 {
     loggerFactory.AddSerilog();
     app.UseSerilogMemoryUsageExact();
@@ -241,7 +241,7 @@ Full example with multiple headers:
 ```json
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using": [ "Serilog.Enrichers.HttpContext" ],
     "Enrich": [
       { "Name": "WithRequestHeader", "Args": { "headerName": "User-Agent" } },
@@ -317,7 +317,7 @@ namespace MyWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             // ...
             loggerFactory.AddSerilog();

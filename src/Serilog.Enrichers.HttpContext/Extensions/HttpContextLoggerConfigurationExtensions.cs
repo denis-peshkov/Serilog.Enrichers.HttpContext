@@ -1,4 +1,4 @@
-﻿namespace Serilog.Extensions;
+namespace Serilog.Extensions;
 
 /// <summary>
 ///   Extension methods for setting up client IP, client agent and correlation identifier enrichers <see cref="LoggerEnrichmentConfiguration"/>.
@@ -20,10 +20,12 @@ public static class HttpContextLoggerConfigurationExtensions
         this LoggerEnrichmentConfiguration enrichmentConfiguration,
         string headerName = "x-forwarded-for")
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
+#endif
 
         return enrichmentConfiguration.With(new ClientIpEnricher(headerName));
     }
@@ -36,10 +38,12 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithMemoryUsage(
         this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
+#endif
 
         return enrichmentConfiguration.With(new MemoryUsageEnricher());
     }
@@ -52,10 +56,12 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithMemoryUsageExact(
         this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
+#endif
 
         return enrichmentConfiguration.With(new MemoryUsageExactEnricher());
     }
@@ -69,10 +75,12 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithRequestBody(
         this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
+#endif
 
         return enrichmentConfiguration.With(new RequestBodyEnricher());
     }
@@ -89,17 +97,25 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithRequestHeader(
         this LoggerEnrichmentConfiguration enrichmentConfiguration,
         string headerName,
-        string propertyName = null)
+        string? propertyName = null)
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET7_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+        ArgumentException.ThrowIfNullOrEmpty(headerName);
+#elif NET6_0
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+        ArgumentNullException.ThrowIfNull(headerName);
+        if (headerName.Length == 0)
+            throw new ArgumentException("Value cannot be empty.", nameof(headerName));
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
-
-        if (headerName == null)
-        {
+        if (headerName is null)
             throw new ArgumentNullException(nameof(headerName));
-        }
+        if (headerName.Length == 0)
+            throw new ArgumentException("Value cannot be empty.", nameof(headerName));
+#endif
+        propertyName ??= headerName;
 
         return enrichmentConfiguration.With(new RequestHeaderEnricher(headerName, propertyName));
     }
@@ -113,10 +129,12 @@ public static class HttpContextLoggerConfigurationExtensions
     public static LoggerConfiguration WithRequestQuery(
         this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
-        if (enrichmentConfiguration == null)
-        {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(enrichmentConfiguration);
+#else
+        if (enrichmentConfiguration is null)
             throw new ArgumentNullException(nameof(enrichmentConfiguration));
-        }
+#endif
 
         return enrichmentConfiguration.With(new RequestQueryEnricher());
     }

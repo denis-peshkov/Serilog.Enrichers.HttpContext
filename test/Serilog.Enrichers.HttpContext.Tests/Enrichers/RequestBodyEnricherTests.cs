@@ -1,18 +1,20 @@
-﻿namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
+namespace Serilog.Enrichers.HttpContext.Tests.Enrichers;
 
 public class RequestBodyEnricherTests
 {
     private const string LogPropertyName = "RequestBody";
-    private readonly IHttpContextAccessor _contextAccessor;
+    private IHttpContextAccessor _contextAccessor;
 
-    public RequestBodyEnricherTests()
+    [SetUp]
+    public void SetUp()
     {
         var httpContext = new DefaultHttpContext();
-        _contextAccessor = Substitute.For<IHttpContextAccessor>();
-        _contextAccessor.HttpContext.Returns(httpContext);
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns(httpContext);
+        _contextAccessor = mock.Object;
     }
 
-    [Fact]
+    [Test]
     public void EnrichLogWithBody_WhenHttpRequestContainBody_ShouldCreateBodyProperty()
     {
         // Arrange
@@ -33,13 +35,44 @@ public class RequestBodyEnricherTests
         log.Information(@"Has a request body.");
 
         // Assert
-        Assert.NotNull(evt);
-        Assert.True(evt.Properties.ContainsKey(LogPropertyName));
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().ContainKey(LogPropertyName);
         // Assert.Equal(body, evt.Properties[LogPropertyName].LiteralValue().ToString()); // todo: fix some strange bug
     }
 
 
 
+
+    [Test]
+    public void Enrich_WhenHttpContextIsNull_DoesNotAddProperty()
+    {
+        var mock = new Mock<IHttpContextAccessor>();
+        mock.Setup(x => x.HttpContext).Returns((Microsoft.AspNetCore.Http.HttpContext?)null);
+        var contextAccessor = mock.Object;
+        var enricher = new RequestBodyEnricher(contextAccessor);
+
+        LogEvent? evt = null;
+        var log = new LoggerConfiguration()
+            .Enrich.With(enricher)
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        log.Information("test");
+
+        evt.Should().NotBeNull();
+        evt!.Properties.Should().NotContainKey(LogPropertyName);
+    }
+
+    [Test]
+    public void WithRequestBody_ThenLoggerIsCalled_ShouldNotThrowException()
+    {
+        var logger = new LoggerConfiguration()
+            .Enrich.WithRequestBody()
+            .WriteTo.Sink(new DelegatingSink(_ => { }))
+            .CreateLogger();
+        var act = () => logger.Information("LOG");
+        act.Should().NotThrow();
+    }
 
     private static void UpdateMemoryStream(MemoryStream memoryStream, string responseBody)
     {

@@ -3,9 +3,9 @@
 /// <inheritdoc/>
 public class RequestBodyEnricher : ILogEventEnricher
 {
-    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     /// <summary>The property name added to enriched log events.</summary>
     private const string PROPERTY_NAME = "RequestBody";
+    private const string ITEM_KEY = $"Serilog_{PROPERTY_NAME}";
     private readonly IHttpContextAccessor _contextAccessor;
 
     public RequestBodyEnricher()
@@ -18,6 +18,7 @@ public class RequestBodyEnricher : ILogEventEnricher
         _contextAccessor = contextAccessor;
     }
 
+    /// <inheritdoc/>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var httpContext = _contextAccessor.HttpContext;

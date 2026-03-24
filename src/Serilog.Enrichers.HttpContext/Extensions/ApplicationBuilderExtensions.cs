@@ -1,4 +1,4 @@
-namespace Serilog.Extensions;
+﻿namespace Serilog.Extensions;
 
 /// <summary>
 /// Extends <see cref="IApplicationBuilder"/> with methods for configuring Serilog features.

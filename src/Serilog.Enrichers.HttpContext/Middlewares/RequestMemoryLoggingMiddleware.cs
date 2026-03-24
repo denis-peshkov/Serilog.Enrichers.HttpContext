@@ -1,4 +1,4 @@
-namespace Serilog.Middlewares;
+﻿namespace Serilog.Middlewares;
 
 public class RequestMemoryLoggingMiddleware
 {
